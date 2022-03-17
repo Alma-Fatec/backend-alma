@@ -1,9 +1,8 @@
 import { Router } from 'express';
-import { Auth } from './modules/auth/authController';
+import { RoleController } from './controllers/RoleController';
 
-const apiRouter = Router();
-const authController = new Auth();
+const routes = Router();
 
-apiRouter.route('/v1/auth').get(authController.handle);
+routes.post('/roles', new RoleController().create);
 
-export default apiRouter;
+export default routes;

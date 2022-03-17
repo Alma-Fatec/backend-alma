@@ -12,7 +12,10 @@ const app = express();
 
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
-app.use(morgan('tiny'));
+app.use(express.json());
+
+app.use(morgan('dev'));
+
 app.use(router);
 
 app.listen(process.env.PORT, () => {

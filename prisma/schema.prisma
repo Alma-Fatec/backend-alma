@@ -9,3 +9,46 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Permissions {
+  id          String   @id
+  name        String
+  description String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  Roles   Roles?  @relation(fields: [rolesId], references: [id])
+  rolesId String?
+  @@map("permissions")
+  Users   Users?  @relation(fields: [usersId], references: [id])
+  usersId String?
+}
+
+model Roles {
+  id          String        @id
+  name        String
+  description String
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  permissions Permissions[]
+
+  @@map("roles")
+  Users   Users?  @relation(fields: [usersId], references: [id])
+  usersId String?
+}
+
+model Users {
+  id          String        @id
+  name        String
+  cpf         String
+  phone       String
+  email       String
+  password    String
+  is_active   Boolean
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  permissions Permissions[]
+  roles       Roles[]
+
+  @@map("users")
+}
