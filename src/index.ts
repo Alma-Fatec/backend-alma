@@ -6,16 +6,24 @@ import swaggerUi from 'swagger-ui-express';
 
 dotenv.config();
 
-import swaggerDocs from './swagger.json';
+//import swaggerDocs from './swagger.json';
 
 const app = express();
-
-app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 app.use(express.json());
 
 app.use(morgan('dev'));
+app.use(express.static('public'));
 
+app.use(
+    '/docs',
+    swaggerUi.serve,
+    swaggerUi.setup(undefined, {
+        swaggerOptions: {
+            url: '/swagger.json',
+        },
+    }),
+);
 app.use(router);
 
 app.listen(process.env.PORT, () => {

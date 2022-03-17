@@ -1,5 +1,3 @@
-import { Role } from '../../entities/Role';
-
 type RolePermissionRequest = {
     roleId: string;
     permissions: string[];
@@ -9,7 +7,7 @@ export class RolePermissionService {
     async create({
         roleId,
         permissions,
-    }: RolePermissionRequest): Promise<Role | Error> {
+    }: RolePermissionRequest): Promise<any | Error> {
         // const repo = RoleRepository();
 
         // const role = await repo.findOne(roleId);

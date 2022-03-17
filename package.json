@@ -7,7 +7,7 @@
         "dev": "ts-node-dev --inspect --respawn --transpile-only --ignore-watch node_modules src/index.ts",
         "build": "tsc --project tsconfig.json",
         "build::clean": "rm -rf ./dist && tsc --project tsconfig.json",
-        "build::docs": "tsoa spec-and-routes && yarn build",
+        "swagger": "tsoa spec",
         "start": "node dist/index.js",
         "lint": "eslint . --ext .ts"
     },
@@ -40,6 +40,7 @@
         "morgan": "^1.10.0",
         "prisma": "^3.10.0",
         "swagger-ui-express": "^4.3.0",
+        "tsoa": "^3.14.1",
         "uuid": "^8.3.2",
         "yup": "^0.32.11"
     }
