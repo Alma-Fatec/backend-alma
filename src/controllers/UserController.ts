@@ -1,9 +1,11 @@
+import { Users } from '@prisma/client';
 import { Request, Response } from 'express';
-import { Post, Route } from 'tsoa';
+import { Body, Controller, Get, Route } from 'tsoa';
 import { CreateUserService } from '../services/user/CreateUserService';
+import { ListUserService } from '../services/user/ListUserService';
 
 @Route('user')
-export class UserController {
+export class UserController extends Controller {
     async create(request: Request, response: Response) {
         const { name, social_name, cpf, phone, email, password } = request.body;
 
@@ -23,5 +25,18 @@ export class UserController {
         }
 
         return response.status(201).send(result);
+    }
+
+    @Get()
+    async index(@Body() request: Request, response: Response<Users | unknown>) {
+        const listUserService = new ListUserService();
+
+        const result = await listUserService.execute();
+
+        if (result instanceof Error) {
+            return response.status(400).json({ error: result.message });
+        }
+
+        return response.status(200).json({ result });
     }
 }
