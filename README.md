@@ -35,3 +35,19 @@ yarn dev
 
 # Equivalente a npm run dev
 ```
+
+## Commits:
+
+Tarefas: 
+```bash
+👷 chore: Descrição da tarefa
+```
+
+Documentação: 
+```bash
+📚 docs: Descrição das alterações
+```
+Build: 
+```bash
+⛏️ build: Descrição das alterações para build
+```
