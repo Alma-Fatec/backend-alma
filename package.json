@@ -3,6 +3,19 @@
     "version": "0.0.1",
     "main": "index.js",
     "license": "MIT",
+    "keywords": [
+        "API REST",
+        "Node.js",
+        "Webservice",
+        "Métodos HTTP",
+        "Banco de dados",
+        "PostgreSQL",
+        "ORM (Mapeamento de objeto relacional",
+        "Typescript",
+        "Tipagem estática",
+        "Encriptação de senhas",
+        "JWT"
+    ],
     "scripts": {
         "dev": "ts-node-dev --inspect --respawn --transpile-only src/index.ts",
         "build": "tsc --project tsconfig.json",
