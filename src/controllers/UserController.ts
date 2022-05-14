@@ -27,8 +27,8 @@ export class UserController extends Controller {
         return response.status(201).send(result);
     }
 
-    @Get()
-    async index(@Body() request: Request, response: Response<Users | unknown>) {
+    @Get('/')
+    async index(request, response: Response): Promise<Users> {
         const listUserService = new ListUserService();
 
         const result = await listUserService.execute();

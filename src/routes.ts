@@ -8,6 +8,10 @@ import { userSchema } from './validators/user';
 
 const routes = Router();
 
+routes.get('/', (req, res) => {
+    res.sendFile(__dirname + '/views/index.html');
+});
+
 routes.post('/login', new SessionController().handle);
 
 routes.post('/user', validate(userSchema), new UserController().create);

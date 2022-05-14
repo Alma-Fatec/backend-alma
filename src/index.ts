@@ -3,7 +3,7 @@ import morgan from 'morgan';
 import dotenv from 'dotenv';
 import router from './routes';
 import swaggerUi from 'swagger-ui-express';
-
+import path from 'path';
 dotenv.config();
 
 //import swaggerDocs from './swagger.json';
@@ -14,6 +14,8 @@ app.use(express.json());
 
 app.use(morgan('dev'));
 app.use(express.static('public'));
+
+app.set('views', path.join(__dirname, 'src/views'));
 
 app.use(
     '/docs',
