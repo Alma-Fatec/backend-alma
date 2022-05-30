@@ -26,8 +26,9 @@ app.use(
         },
     }),
 );
+
 app.use(router);
 
 app.listen(process.env.PORT, () => {
-    console.log(`🦜: App rodando na porta ${process.env.PORT}!`);
+    console.log(`🦜: App rodando em http://localhost:${process.env.PORT}`);
 });

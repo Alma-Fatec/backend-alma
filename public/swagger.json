@@ -3,9 +3,111 @@
 		"examples": {},
 		"headers": {},
 		"parameters": {},
-		"requestBodies": {},
+		"requestBodies": {
+			"UserArray": {
+				"description": "List of user object",
+				"content": {
+					"application/json": {
+						"schema": {
+							"type": "array",
+							"items": {
+								"$ref": "#/components/schemas/User"
+							}
+						}
+					}
+				},
+				"required": true
+			},
+			"User": {
+				"description": "List of user object",
+				"content": {
+					"application/json": {
+						"schema": {
+							"$ref": "#/components/schemas/User"
+						}
+					}
+				},
+				"required": true
+			},
+			"Login": {
+				"description": "Credenciais de login",
+				"content": {
+					"application/json": {
+						"schema": {
+							"$ref": "#/components/schemas/LoginInfo"
+						}
+					}
+				},
+				"required": true
+			}
+		},
 		"responses": {},
-		"schemas": {},
+		"schemas": {
+			"User": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"social_name": {
+						"type": "string"
+					},
+					"cpf": {
+						"type": "string"
+					},
+					"phone": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					},
+					"is_active": {
+						"type": "boolean",
+						"description": "Usuário ativo"
+					},
+					"createdAt": {
+						"type": "string"
+					},
+					"updatedAt": {
+						"type": "string"
+					}
+				},
+				"xml": {
+					"name": "User"
+				}
+			},
+			"LoginInfo": {
+				"type": "object",
+				"properties": {
+					"email": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					}
+				},
+				"xml": {
+					"name": "User"
+				}
+			},
+			"LoginResponse": {
+				"type": "object",
+				"properties": {
+					"token": {
+						"type": "string"
+					}
+				},
+				"xml": {
+					"name": "User"
+				}
+			}
+		},
 		"securitySchemes": {}
 	},
 	"info": {
@@ -17,7 +119,62 @@
 		"contact": {}
 	},
 	"openapi": "3.0.0",
-	"paths": {},
+	"paths": {
+		"/user": {
+			"get": {
+				"description": "Retorna os usuários cadastrados",
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/User"
+									}
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"description": "Cria um novo usuário",
+				"parameters": [],
+				"requestBody": {
+					"$ref": "#/components/requestBodies/User"
+				},
+				"responses": {
+					"201": {
+						"description": "OK"
+					}
+				}
+			}
+		},
+		"/login": {
+			"post": {
+				"description": "Cria um token JWT",
+				"parameters": [],
+				"requestBody": {
+					"$ref": "#/components/requestBodies/Login"
+				},
+				"responses": {
+					"201": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/LoginResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
 	"servers": [
 		{
 			"url": "/"
