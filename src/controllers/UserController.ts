@@ -28,7 +28,7 @@ export class UserController extends Controller {
     }
 
     @Get('/')
-    async index(request, response: Response): Promise<Users> {
+    async index(_request: Request, response: Response) {
         const listUserService = new ListUserService();
 
         const result = await listUserService.execute();
