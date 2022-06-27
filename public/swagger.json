@@ -3,87 +3,96 @@
 		"examples": {},
 		"headers": {},
 		"parameters": {},
-		"requestBodies": {
-			"UserArray": {
-				"description": "List of user object",
-				"content": {
-					"application/json": {
-						"schema": {
-							"type": "array",
-							"items": {
-								"$ref": "#/components/schemas/User"
-							}
-						}
-					}
-				},
-				"required": true
-			},
-			"User": {
-				"description": "List of user object",
-				"content": {
-					"application/json": {
-						"schema": {
-							"$ref": "#/components/schemas/User"
-						}
-					}
-				},
-				"required": true
-			},
-			"Login": {
-				"description": "Credenciais de login",
-				"content": {
-					"application/json": {
-						"schema": {
-							"$ref": "#/components/schemas/LoginInfo"
-						}
-					}
-				},
-				"required": true
-			}
-		},
+		"requestBodies": {},
 		"responses": {},
 		"schemas": {
-			"User": {
-				"type": "object",
+			"PingResponse": {
 				"properties": {
-					"id": {
+					"message": {
 						"type": "string"
+					}
+				},
+				"required": [
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Error": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"message": {
+						"type": "string"
+					},
+					"stack": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"name",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Users": {
+				"properties": {
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
+					},
+					"is_active": {
+						"type": "boolean"
+					},
+					"password": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"phone": {
+						"type": "string",
+						"nullable": true
+					},
+					"cpf": {
+						"type": "string",
+						"nullable": true
+					},
+					"social_name": {
+						"type": "string",
+						"nullable": true
 					},
 					"name": {
 						"type": "string"
 					},
-					"social_name": {
-						"type": "string"
-					},
-					"cpf": {
-						"type": "string"
-					},
-					"phone": {
-						"type": "string"
-					},
-					"email": {
-						"type": "string"
-					},
-					"password": {
-						"type": "string"
-					},
-					"is_active": {
-						"type": "boolean",
-						"description": "Usuário ativo"
-					},
-					"createdAt": {
-						"type": "string"
-					},
-					"updatedAt": {
+					"id": {
 						"type": "string"
 					}
 				},
-				"xml": {
-					"name": "User"
-				}
+				"required": [
+					"updatedAt",
+					"createdAt",
+					"is_active",
+					"password",
+					"email",
+					"phone",
+					"cpf",
+					"social_name",
+					"name",
+					"id"
+				],
+				"type": "object",
+				"description": "Model Users"
 			},
 			"LoginInfo": {
-				"type": "object",
 				"properties": {
 					"email": {
 						"type": "string"
@@ -92,20 +101,12 @@
 						"type": "string"
 					}
 				},
-				"xml": {
-					"name": "User"
-				}
-			},
-			"LoginResponse": {
+				"required": [
+					"email",
+					"password"
+				],
 				"type": "object",
-				"properties": {
-					"token": {
-						"type": "string"
-					}
-				},
-				"xml": {
-					"name": "User"
-				}
+				"additionalProperties": false
 			}
 		},
 		"securitySchemes": {}
@@ -120,54 +121,135 @@
 	},
 	"openapi": "3.0.0",
 	"paths": {
-		"/user": {
+		"/ping": {
 			"get": {
-				"description": "Retorna os usuários cadastrados",
-				"parameters": [],
+				"operationId": "GetMessage",
 				"responses": {
 					"200": {
-						"description": "OK",
+						"description": "Ok",
 						"content": {
 							"application/json": {
 								"schema": {
-									"type": "array",
-									"items": {
-										"$ref": "#/components/schemas/User"
-									}
+									"$ref": "#/components/schemas/PingResponse"
 								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/users": {
+			"post": {
+				"operationId": "Create",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"anyOf": [
+										{
+											"$ref": "#/components/schemas/Error"
+										},
+										{
+											"$ref": "#/components/schemas/Users"
+										}
+									]
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"User"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Users"
 							}
 						}
 					}
 				}
 			},
-			"post": {
-				"description": "Cria um novo usuário",
-				"parameters": [],
-				"requestBody": {
-					"$ref": "#/components/requestBodies/User"
-				},
+			"get": {
+				"operationId": "GetUsers",
 				"responses": {
-					"201": {
-						"description": "OK"
-					}
-				}
-			}
-		},
-		"/login": {
-			"post": {
-				"description": "Cria um token JWT",
-				"parameters": [],
-				"requestBody": {
-					"$ref": "#/components/requestBodies/Login"
-				},
-				"responses": {
-					"201": {
-						"description": "OK",
+					"200": {
+						"description": "Ok",
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/LoginResponse"
+									"anyOf": [
+										{
+											"$ref": "#/components/schemas/Error"
+										},
+										{
+											"items": {
+												"$ref": "#/components/schemas/Users"
+											},
+											"type": "array"
+										}
+									]
 								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"User"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/session/login": {
+			"post": {
+				"operationId": "Handle",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"anyOf": [
+										{
+											"$ref": "#/components/schemas/Error"
+										},
+										{
+											"properties": {
+												"token": {
+													"type": "string"
+												}
+											},
+											"required": [
+												"token"
+											],
+											"type": "object"
+										}
+									]
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Session"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/LoginInfo"
 							}
 						}
 					}
