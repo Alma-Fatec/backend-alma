@@ -10,7 +10,10 @@ type UserRequest = {
 export class CreateSessionService {
     protected prisma = new PrismaClient();
 
-    async execute({ email, password }: UserRequest): Promise<object | Error> {
+    async execute({
+        email,
+        password,
+    }: UserRequest): Promise<{ token: string } | Error> {
         const user = await this.prisma.users.findUnique({ where: { email } });
 
         if (!user) {
@@ -18,9 +21,13 @@ export class CreateSessionService {
         }
 
         const passwordMatch = await compare(password, user.password);
+
+        console.log(user);
+
         if (!passwordMatch) {
             return new Error('Usuário ou senha incorretos.');
         }
+
         const token = sign({}, String(process.env.APP_SECRET), {
             subject: user.id,
             expiresIn: '7h',
