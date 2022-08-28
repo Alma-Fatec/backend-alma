@@ -36,18 +36,46 @@ model Roles {
 }
 
 model Users {
-  id          String        @id
-  name        String
-  social_name String?
-  cpf         String?       @unique
-  phone       String?
-  email       String        @unique
-  password    String
-  is_active   Boolean
-  createdAt   DateTime?     @default(now())
-  updatedAt   DateTime?     @updatedAt
-  permissions Permissions[]
-  roles       Roles[]
+  id             String        @id
+  name           String
+  social_name    String?
+  cpf            String?       @unique
+  phone          String?
+  email          String        @unique
+  password       String
+  is_active      Boolean
+  createdAt      DateTime?     @default(now())
+  updatedAt      DateTime?     @updatedAt
+  permissions    Permissions[]
+  roles          Roles[]
+  ClassesBlock   ClassesBlock? @relation(fields: [classesBlockId], references: [id])
+  classesBlockId Int?
 
   @@map("users")
+}
+
+model ClassesBlock {
+  id          Int       @id @default(autoincrement())
+  description String    @db.VarChar(240)
+  cover       String
+  users       Users[]
+  classes     Classes[]
+  createdAt   DateTime? @default(now())
+  updatedAt   DateTime? @updatedAt
+
+  @@map("classesBlock")
+}
+
+model Classes {
+  id             Int           @id @default(autoincrement())
+  name           String        @db.VarChar(240)
+  description    String        @db.VarChar(240)
+  cover          String
+  createdAt      DateTime?     @default(now())
+  updatedAt      DateTime?     @updatedAt
+  orderAtBlock   Int
+  ClassesBlock   ClassesBlock? @relation(fields: [classesBlockId], references: [id])
+  classesBlockId Int?
+
+  @@map("classes")
 }
