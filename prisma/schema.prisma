@@ -48,8 +48,8 @@ model Users {
   updatedAt      DateTime?     @updatedAt
   permissions    Permissions[]
   roles          Roles[]
-  ClassesBlock   ClassesBlock? @relation(fields: [classesBlockId], references: [id])
   classesBlockId Int?
+  ClassesBlock   ClassesBlock? @relation(fields: [classesBlockId], references: [id])
 
   @@map("users")
 }
@@ -58,10 +58,10 @@ model ClassesBlock {
   id          Int       @id @default(autoincrement())
   description String    @db.VarChar(240)
   cover       String
-  users       Users[]
-  classes     Classes[]
   createdAt   DateTime? @default(now())
   updatedAt   DateTime? @updatedAt
+  users       Users[]
+  classes     Classes[]
 
   @@map("classesBlock")
 }
@@ -74,8 +74,8 @@ model Classes {
   createdAt      DateTime?     @default(now())
   updatedAt      DateTime?     @updatedAt
   orderAtBlock   Int
-  ClassesBlock   ClassesBlock? @relation(fields: [classesBlockId], references: [id])
   classesBlockId Int?
+  ClassesBlock   ClassesBlock? @relation(fields: [classesBlockId], references: [id])
 
   @@map("classes")
 }
