@@ -1,18 +1,12 @@
-import { PrismaClient, Users } from '@prisma/client';
+import { Users } from '@prisma/client';
 import { hash } from 'bcryptjs';
 import { v4 as uuid } from 'uuid';
+import prisma from '../prisma';
 
-type UserRequest = {
-    name: string;
-    social_name: string;
-    cpf: string;
-    phone: string;
-    email: string;
-    password: string;
-};
+type UserRequest = Omit<Users, 'id' | 'is_active' | 'createdAt' | 'updatedAt'>;
 
 export class CreateUserService {
-    protected prisma = new PrismaClient();
+    protected prisma = prisma;
 
     async execute({
         name,
@@ -27,7 +21,7 @@ export class CreateUserService {
         });
 
         const cpfAlreadyExists = await this.prisma.users.findUnique({
-            where: { cpf: cpf },
+            where: { cpf: String(cpf) },
         });
 
         if (emailAlreadyExists) {
