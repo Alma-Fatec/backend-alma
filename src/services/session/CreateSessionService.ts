@@ -22,8 +22,6 @@ export class CreateSessionService {
 
         const passwordMatch = await compare(password, user.password);
 
-        console.log(user);
-
         if (!passwordMatch) {
             return new Error('Usuário ou senha incorretos.');
         }
@@ -32,6 +30,7 @@ export class CreateSessionService {
             subject: user.id,
             expiresIn: '7h',
         });
+
         return { token };
     }
 }

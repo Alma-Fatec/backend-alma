@@ -2,6 +2,7 @@ import { Router } from 'express';
 import PingController from '../controllers/ping.controller';
 import UserRouter from './user.routes';
 import SessionRouter from './session.routes';
+import ClassesBlockRouter from './classesBlock.routes';
 import path from 'path';
 
 const router = Router();
@@ -18,6 +19,7 @@ router.get('/ping', async (_req, res) => {
 
 router.use('/users', UserRouter);
 router.use('/session', SessionRouter);
+router.use('/classesBlock', ClassesBlockRouter);
 
 //router.post('/login', new SessionController().handle);
 

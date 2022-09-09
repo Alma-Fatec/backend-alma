@@ -12,6 +12,7 @@ app.use(express.json());
 
 app.use(morgan('dev'));
 app.use(express.static('public'));
+app.use('/uploads', express.static('uploads'));
 
 app.use(
     '/docs',

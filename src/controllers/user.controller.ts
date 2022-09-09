@@ -19,6 +19,7 @@ export default class UserController {
             phone,
             email,
             password,
+            classesBlockId: null,
         });
 
         return result;
