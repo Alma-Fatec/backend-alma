@@ -1,10 +1,6 @@
 import express from 'express';
 import ClassesController from '../controllers/classes.controller';
-import ClassesBlockController from '../controllers/classesBlock.controller';
-import { ensuredAuthenticated } from '../middlewares/ensuredAuthenticated';
-import validate from '../middlewares/validate';
 import uploadService from '../services/upload';
-import { classesBlockSchema } from '../validators/classesBlock';
 
 const router = express.Router();
 const controller = new ClassesController();

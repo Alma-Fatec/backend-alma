@@ -1,3 +1,5 @@
+import 'reflect-metadata';
+
 import express, { Application } from 'express';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
