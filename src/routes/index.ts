@@ -3,12 +3,11 @@ import PingController from '../controllers/ping.controller';
 import UserRouter from './user.routes';
 import SessionRouter from './session.routes';
 import ClassesBlockRouter from './classesBlock.routes';
-import path from 'path';
 
 const router = Router();
 
 router.get('/', (_req, res) => {
-    res.sendFile(path.resolve('src/views/index.html'));
+    res.json({ message: 'Welcome to the API!' });
 });
 
 router.get('/ping', async (_req, res) => {
