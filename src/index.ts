@@ -1,16 +1,19 @@
 import 'reflect-metadata';
 
+
+
 import express, { Application } from 'express';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
 import Router from './routes';
 import swaggerUi from 'swagger-ui-express';
-
 import cors from 'cors';
+
 const whitelist = ['*'];
 
 dotenv.config();
 
+import './infra/database/dataSource';
 const app: Application = express();
 
 app.use(express.json());

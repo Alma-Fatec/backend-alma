@@ -20,12 +20,5 @@ router.use('/users', UserRouter);
 router.use('/session', SessionRouter);
 router.use('/classesBlock', ClassesBlockRouter);
 
-//router.post('/login', new SessionController().handle);
-
-// router.get('/', (req, res) => {
-//     res.sendFile(__dirname + '/views/index.html');
-// });
-
-// router.post('/roles', new RoleController().create);
 
 export default router;
