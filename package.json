@@ -17,7 +17,7 @@
         "JWT"
     ],
     "scripts": {
-        "start": "node dist/index.js",
+        "start": "ts-node src/index.ts",
         "dev": "nodemon",
         "prebuild": "npm run swagger",
         "build": "tsc --project tsconfig.json",
@@ -28,7 +28,11 @@
         "swagger": "tsoa spec",
         "test": "jest",
         "prepare": "husky install",
-        "commit": "git-cz"
+        "commit": "git-cz",
+        "typeorm": "dotenv -e .env -- ts-node-dev node_modules/.bin/typeorm",
+        "typeorm:migration": "dotenv -e .env -- bash -c 'ts-node-dev node_modules/typeorm/cli.js migration:create $TYPEORM_MIGRATIONS_DIR/default'",
+        "typeorm:up": "dotenv -e .env -- ts-node-dev node_modules/typeorm/cli.js migration:run -d src/infra/database/dataSource.ts ",
+        "typeorm:generate": "dotenv -e .env -- ts-node-dev node_modules/typeorm/cli.js migration:generate -d src/infra/database/dataSource.ts src/infra/database/migrations/default"
     },
     "devDependencies": {
         "@commitlint/cli": "^17.1.2",
@@ -57,11 +61,12 @@
         "nodemon": "^2.0.19",
         "prettier": "^2.5.1",
         "ts-jest": "^28.0.5",
-        "ts-node": "^10.9.1",
+        "ts-node": "10.7.0",
         "ts-node-dev": "^1.1.8",
         "tsconfig-paths": "^3.12.0",
         "tscpaths": "^0.0.9",
-        "typescript": "^4.8.2"
+        "typescript": "4.5.2",
+        "@types/node": "^16.11.10"
     },
     "dependencies": {
         "@prisma/client": "^3.14.0",
@@ -72,12 +77,12 @@
         "jsonwebtoken": "^8.5.1",
         "morgan": "^1.10.0",
         "multer": "^1.4.5-lts.1",
-        "pg": "^8.8.0",
+        "pg": "^8.4.0",
         "prisma": "^3.14.0",
         "reflect-metadata": "^0.1.13",
         "swagger-ui-express": "^4.4.0",
         "tsoa": "^4.1.0",
-        "typeorm": "^0.3.9",
+        "typeorm": "0.3.9",
         "uuid": "^8.3.2",
         "yup": "^0.32.11"
     },

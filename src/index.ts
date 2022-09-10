@@ -1,7 +1,5 @@
 import 'reflect-metadata';
 
-
-
 import express, { Application } from 'express';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
@@ -14,6 +12,7 @@ const whitelist = ['*'];
 dotenv.config();
 
 import './infra/database/dataSource';
+
 const app: Application = express();
 
 app.use(express.json());

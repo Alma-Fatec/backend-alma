@@ -1,9 +1,7 @@
-import { ValidationError } from 'yup';
-import { userSchema } from '../validators/user';
-import { BaseEntity } from './baseEntity';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { Roles } from './roles';
-
-type UserProps = {
+import { v4 } from 'uuid';
+interface UserProps {
     name: string;
     socialName: string;
     cpf: string;
@@ -12,14 +10,44 @@ type UserProps = {
     password: string;
     isActive: boolean;
     role: Roles;
-};
+}
 
-export class User extends BaseEntity<UserProps> {
-    private constructor(parameters: UserProps, id: string) {
-        super(parameters, id);
-    }
+@Entity('user')
+export class User {
+    @PrimaryGeneratedColumn('uuid')
+    public readonly id: string;
 
-    static async create(parameters: UserProps, id?: string) {
-        return new User(parameters, id as string);
+    @Column({ type: 'text' })
+    name: string;
+
+    @Column({ type: 'text' })
+    socialName: string;
+
+    @Column({ type: 'text' })
+    cpf: string;
+
+    @Column({ type: 'text' })
+    phone: string;
+
+    @Column({ type: 'text' })
+    email: string;
+
+    @Column({ type: 'text' })
+    password: string;
+
+    @Column({ type: 'boolean' })
+    isActive: boolean;
+
+    @Column({ type: 'text' })
+    public role: Roles;
+
+    // write constructor to initialize the properties of the class with the values passed in the constructor parameters
+
+    constructor(props: UserProps, id?: string) {
+        Object.assign(this, props);
+
+        if (!id) {
+            this.id = v4();
+        }
     }
 }
