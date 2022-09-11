@@ -20,6 +20,4 @@ router.use('/users', UserRouter);
 router.use('/session', SessionRouter);
 router.use('/classesBlock', ClassesBlockRouter);
 
-
-
 export default router;

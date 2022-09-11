@@ -41,4 +41,24 @@ export class SessionController {
         delete user.password;
         return res.status(201).json({ token, user });
     }
+
+    @Post('/refresh')
+    async refresh(req: Request, res: Response) {
+        const { user_id } = req.body;
+
+        const user = await userRepository.findOne({
+            where: { id: user_id },
+        });
+
+        if (!user) {
+            throw new ApiError('Esse usuário não existe.', 400);
+        }
+
+        const refreshToken = sign({}, String(process.env.APP_SECRET), {
+            subject: user.id,
+            expiresIn: '7h',
+        });
+
+        return res.status(201).json({ token: refreshToken });
+    }
 }

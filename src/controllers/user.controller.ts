@@ -1,15 +1,14 @@
-import { Users } from '@prisma/client';
 import { hash } from 'bcryptjs';
 import { Request, Response } from 'express';
-import { Get, Post, Route, Tags } from 'tsoa';
+import { Get, Patch, Post, Route, Tags } from 'tsoa';
 import { ValidationError } from 'yup';
 import { User } from '../entities/user';
+import { Roles } from '../entities/roles';
 import { ApiError } from '../middlewares/error';
 import { userRepository } from '../repositories/user.repository';
-import { CreateUserService } from '../services/user/createUser.service';
-import { ListUserService } from '../services/user/listUser.service';
 import { userSchema } from '../validators/user';
 
+const roles: Roles[] = ['Admin', 'Student', 'Teacher'];
 @Route('users')
 @Tags('User')
 export default class UserController {
@@ -59,11 +58,57 @@ export default class UserController {
     }
 
     @Get('/')
-    async getUsers(): Promise<Error | Users[]> {
-        const listUserService = new ListUserService();
+    async getUsers(req: Request, res: Response) {
+        const page = parseInt(req.params.page) || 1;
+        const limit = parseInt(req.params.limit) || 10;
 
-        const result = await listUserService.execute();
+        const users = await userRepository.find({
+            take: limit,
+            skip: limit * (page - 1),
+        });
 
-        return result;
+        return res.json({
+            page,
+            limit,
+            users,
+        });
+    }
+
+    @Get('/:id')
+    async getUser(req: Request, res: Response) {
+        const { id } = req.params;
+
+        const user = await userRepository.findOne({
+            where: { id },
+        });
+
+        if (!user) {
+            throw new ApiError('Usuário não encontrado', 404);
+        }
+
+        return res.json(user);
+    }
+
+    @Patch('/:id')
+    async promoteUser(req: Request, res: Response) {
+        const { id } = req.params;
+        const { role } = req.body;
+        const user = await userRepository.findOne({
+            where: { id },
+        });
+
+        if (!user) {
+            throw new ApiError('Usuário não encontrado', 404);
+        }
+
+        if (!roles.includes(role.trim() as Roles)) {
+            throw new ApiError('Role inválida', 400);
+        }
+
+        await userRepository.update(user.id, {
+            role: req.body.role,
+        });
+
+        return res.json({ ...user, role });
     }
 }

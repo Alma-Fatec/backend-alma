@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { verify } from 'jsonwebtoken';
+import { decode, verify } from 'jsonwebtoken';
 
 export const ensuredAuthenticated = () => {
     return async (request: Request, response: Response, next: NextFunction) => {
@@ -13,6 +13,12 @@ export const ensuredAuthenticated = () => {
 
         try {
             verify(token, String(process.env.APP_SECRET));
+
+            const {sub} = decode(token);
+
+            //@ts-ignore
+            request.userId = sub;
+
             return next();
         } catch (err) {
             return response.status(401).json({ error: 'Não autorizado' });
