@@ -1,6 +1,7 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Roles } from './roles';
 import { v4 } from 'uuid';
+import { Block } from './block';
 interface UserProps {
     name: string;
     socialName: string;
@@ -10,6 +11,7 @@ interface UserProps {
     password: string;
     isActive: boolean;
     role: Roles;
+    blocks: Block[];
 }
 
 @Entity('user')
@@ -41,6 +43,8 @@ export class User {
     @Column({ type: 'text' })
     public role: Roles;
 
+    @ManyToMany(() => Block, (block) => block.users)
+    blocks: Block[];
     // write constructor to initialize the properties of the class with the values passed in the constructor parameters
 
     constructor(props: UserProps, id?: string) {

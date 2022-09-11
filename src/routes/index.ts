@@ -2,7 +2,7 @@ import { Router } from 'express';
 import PingController from '../controllers/ping.controller';
 import UserRouter from './user.routes';
 import SessionRouter from './session.routes';
-import ClassesBlockRouter from './classesBlock.routes';
+import ClassesBlockRouter from './block.routes';
 
 const router = Router();
 
