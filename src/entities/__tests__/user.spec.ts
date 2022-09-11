@@ -1,9 +1,8 @@
-import { ValidationError } from 'yup';
 import { User } from '../user';
 
 describe('User', () => {
-   /*  it('should create a user', async () => {
-        const user =  User({
+    it('should create a user', async () => {
+        const user = new User({
             name: 'Test',
             socialName: 'Test',
             cpf: '123.456.789-10',
@@ -14,5 +13,5 @@ describe('User', () => {
             role: 'Student',
         });
         expect(user).toBeTruthy();
-    }); */
+    });
 });

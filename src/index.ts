@@ -4,6 +4,8 @@ import express, { Application } from 'express';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
 import Router from './routes';
+import { errorMiddleware } from './middlewares/error';
+
 import swaggerUi from 'swagger-ui-express';
 import cors from 'cors';
 
@@ -20,6 +22,8 @@ app.use(express.json());
 app.use(morgan('dev'));
 app.use(express.static('public'));
 app.use('/uploads', express.static('uploads'));
+
+app.use(errorMiddleware);
 
 app.use(
     cors({
