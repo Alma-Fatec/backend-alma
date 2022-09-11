@@ -1,32 +1,65 @@
 import { Users } from '@prisma/client';
-import { Body, Get, Post, Route, Tags } from 'tsoa';
+import { hash } from 'bcryptjs';
+import { Request, Response } from 'express';
+import { Get, Post, Route, Tags } from 'tsoa';
+import { ValidationError } from 'yup';
+import { User } from '../entities/user';
+import { ApiError } from '../middlewares/error';
+import { userRepository } from '../repositories/user.repository';
 import { CreateUserService } from '../services/user/createUser.service';
 import { ListUserService } from '../services/user/listUser.service';
+import { userSchema } from '../validators/user';
 
 @Route('users')
 @Tags('User')
 export default class UserController {
+    protected userTable = userRepository;
+
     @Post('/')
-    public async create(@Body() body: Users): Promise<Error | Users> {
-        const { name, social_name, cpf, phone, email, password } = body;
+    async create(req: Request, res: Response) {
+        const { body }: { body: User } = req;
 
-        const createUserService = new CreateUserService();
+        try {
+            userSchema.validateSync(body);
+        } catch (error) {
+            if (error instanceof ValidationError) {
+                throw new ApiError(error.errors.join(' '), 400);
+            }
+        }
 
-        const result = await createUserService.execute({
-            name,
-            social_name,
-            cpf,
-            phone,
-            email,
-            password,
-            classesBlockId: null,
+        const emailAlreadyExists = await userRepository.findOne({
+            where: { email: body.email },
         });
 
-        return result;
+        if (emailAlreadyExists) {
+            throw new ApiError('Esse email já está em uso', 400);
+        }
+
+        const cpfAlreadyExists = await userRepository.findOne({
+            where: { cpf: String(body.cpf) },
+        });
+
+        if (cpfAlreadyExists) {
+            throw new ApiError('Esse cpf já foi cadastrado', 400);
+        }
+
+        const passwordHash = await hash(body.password, 8);
+
+        const user = await userRepository.create({
+            ...body,
+            cpf: String(body.cpf),
+            password: passwordHash,
+            isActive: true,
+            role: 'Student',
+        });
+
+        const result = await userRepository.save(user);
+
+        return res.status(201).json(result);
     }
 
     @Get('/')
-    public async getUsers(): Promise<Error | Users[]> {
+    async getUsers(): Promise<Error | Users[]> {
         const listUserService = new ListUserService();
 
         const result = await listUserService.execute();

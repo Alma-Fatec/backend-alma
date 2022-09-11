@@ -1,6 +1,6 @@
 import { DataSource } from 'typeorm';
 
-const port = process.env.DB_PORT as number | undefined;
+const port = (process.env.DB_PORT as number | undefined) || 55003;
 
 const migrationsPath = process.env.TYPEORM_MIGRATIONS_DIR as string;
 const entitiesPath = process.env.TYPEORM_MIGRATIONS as string;
