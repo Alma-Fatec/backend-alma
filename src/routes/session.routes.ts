@@ -5,15 +5,7 @@ const router = express.Router();
 
 const controller = new SessionController();
 
-router.post('/login', async (req, res) => {
-    const response = await controller.handle(req.body);
-
-    if (response instanceof Error) {
-        return res.status(400).json({ error: response.message });
-    }
-
-    return res.status(201).send(response);
-});
+router.post('/login', controller.login);
 
 // router.get('/', ensuredAuthenticated(), async (req, res) => {
 //     const response = await controller.getUsers();

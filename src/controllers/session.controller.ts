@@ -1,5 +1,9 @@
-import { Body, Post, Route, Tags } from 'tsoa';
-import { CreateSessionService } from '../services/session/CreateSessionService';
+import { compare } from 'bcryptjs';
+import { Request, Response } from 'express';
+import { sign } from 'jsonwebtoken';
+import { Post, Route, Tags } from 'tsoa';
+import { ApiError } from '../middlewares/error';
+import { userRepository } from '../repositories/user.repository';
 
 interface LoginInfo {
     email: string;
@@ -10,12 +14,31 @@ interface LoginInfo {
 @Tags('Session')
 export class SessionController {
     @Post('/login')
-    async handle(@Body() body: LoginInfo) {
-        const { email, password } = body;
+    async login(req: Request, res: Response) {
+        const { email, password } = req.body;
 
-        const sessionService = new CreateSessionService();
-        const result = await sessionService.execute({ email, password });
+        const user = await userRepository.findOne({
+            select: ['id', 'name', 'email', 'password', 'socialName', 'phone'],
+            where: { email },
+        });
 
-        return result;
+        if (!user) {
+            throw new ApiError('Esse usuário não existe.', 400);
+        }
+
+        const passwordMatch = await compare(password, user.password);
+
+        if (!passwordMatch) {
+            throw new ApiError('Usuário ou senha incorretos.', 400);
+        }
+
+        const token = sign({}, String(process.env.APP_SECRET), {
+            subject: user.id,
+            expiresIn: '7h',
+        });
+
+        //@ts-ignore
+        delete user.password;
+        return res.status(201).json({ token, user });
     }
 }
