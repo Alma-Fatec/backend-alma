@@ -1,10 +1,22 @@
+import 'reflect-metadata';
+import 'express-async-errors';
+
 import express, { Application } from 'express';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
-import Router from './routes';
-import swaggerUi from 'swagger-ui-express';
+import routes from './routes';
+import { errorMiddleware } from './middlewares/error';
 
-dotenv.config();
+import swaggerUi from 'swagger-ui-express';
+import cors from 'cors';
+
+const whitelist = ['*'];
+
+dotenv.config({
+    path: process.env.NODE_ENV === 'development' ? '.env' : '.env.prod',
+});
+
+import './infra/database/dataSource';
 
 const app: Application = express();
 
@@ -15,6 +27,15 @@ app.use(express.static('public'));
 app.use('/uploads', express.static('uploads'));
 
 app.use(
+    cors({
+        origin: whitelist,
+    }),
+);
+
+app.use(routes);
+app.use(errorMiddleware);
+
+app.use(
     '/docs',
     swaggerUi.serve,
     swaggerUi.setup(undefined, {
@@ -23,8 +44,6 @@ app.use(
         },
     }),
 );
-
-app.use(Router);
 
 app.listen(process.env.PORT, () => {
     console.log(`🦜: App rodando em http://localhost:${process.env.PORT}`);

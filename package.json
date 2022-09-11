@@ -17,7 +17,7 @@
         "JWT"
     ],
     "scripts": {
-        "start": "node dist/index.js",
+        "start": "ts-node src/index.ts",
         "dev": "nodemon",
         "prebuild": "npm run swagger",
         "build": "tsc --project tsconfig.json",
@@ -26,47 +26,70 @@
         "lint": "eslint . --ext .ts",
         "docs": "concurrently \"nodemon\" \"nodemon -x tsoa spec\"",
         "swagger": "tsoa spec",
-        "test": "jest"
+        "test": "jest",
+        "prepare": "husky install",
+        "commit": "git-cz",
+        "typeorm": "dotenv -e .env -- ts-node-dev node_modules/.bin/typeorm",
+        "typeorm:migration": "dotenv -e .env -- bash -c 'ts-node-dev node_modules/typeorm/cli.js migration:create $TYPEORM_MIGRATIONS_DIR/default'",
+        "typeorm:up": "dotenv -e .env -- ts-node-dev node_modules/typeorm/cli.js migration:run -d src/infra/database/dataSource.ts ",
+        "typeorm:generate": "dotenv -e .env -- ts-node-dev node_modules/typeorm/cli.js migration:generate -d src/infra/database/dataSource.ts src/infra/database/migrations/default"
     },
     "devDependencies": {
+        "@commitlint/cli": "^17.1.2",
+        "@commitlint/config-conventional": "^17.1.0",
         "@types/bcryptjs": "^2.4.2",
+        "@types/cors": "^2.8.12",
         "@types/dotenv": "^8.2.0",
         "@types/express": "^4.17.13",
         "@types/jest": "^28.1.3",
         "@types/jsonwebtoken": "^8.5.8",
         "@types/morgan": "^1.9.3",
         "@types/multer": "^1.4.7",
+        "@types/node": "^16.11.10",
         "@types/swagger-ui-express": "^4.1.3",
         "@types/uuid": "^8.3.4",
         "@types/yup": "^0.29.13",
         "@typescript-eslint/eslint-plugin": "^5.13.0",
         "@typescript-eslint/parser": "^5.13.0",
+        "commitizen": "^4.2.5",
         "concurrently": "^7.2.2",
+        "cz-conventional-changelog": "3.3.0",
         "eslint": "^8.10.0",
         "eslint-config-prettier": "^8.5.0",
         "eslint-plugin-prettier": "^4.0.0",
+        "husky": "^8.0.1",
         "jest": "^28.1.1",
         "nodemon": "^2.0.19",
         "prettier": "^2.5.1",
         "ts-jest": "^28.0.5",
-        "ts-node": "^10.9.1",
+        "ts-node": "10.7.0",
         "ts-node-dev": "^1.1.8",
         "tsconfig-paths": "^3.12.0",
         "tscpaths": "^0.0.9",
-        "typescript": "^4.8.2"
+        "typescript": "4.5.2"
     },
     "dependencies": {
         "@prisma/client": "^3.14.0",
         "bcryptjs": "^2.4.3",
+        "cors": "^2.8.5",
         "dotenv": "^16.0.0",
         "express": "^4.17.3",
+        "express-async-errors": "^3.1.1",
         "jsonwebtoken": "^8.5.1",
         "morgan": "^1.10.0",
         "multer": "^1.4.5-lts.1",
+        "pg": "^8.4.0",
         "prisma": "^3.14.0",
+        "reflect-metadata": "^0.1.13",
         "swagger-ui-express": "^4.4.0",
         "tsoa": "^4.1.0",
+        "typeorm": "0.3.9",
         "uuid": "^8.3.2",
         "yup": "^0.32.11"
+    },
+    "config": {
+        "commitizen": {
+            "path": "./node_modules/cz-conventional-changelog"
+        }
     }
 }
