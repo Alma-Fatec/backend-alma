@@ -51,8 +51,9 @@ export default class ClassesBlockController {
 
     @Get('/')
     public async getBlocks(req: Request, res: Response) {
-        const page = parseInt(req.params.page) || 1;
-        const limit = parseInt(req.params.limit) || 10;
+        const page = Number(req.query.page) || 1;
+        const limit = Number(req.query.limit) || 10;
+
 
         const blocks = await blockRepository.find({
             skip: (page - 1) * limit,
@@ -66,27 +67,11 @@ export default class ClassesBlockController {
         });
     }
 
-    @Patch('/')
-    public async pathBlocks() {
-        /*    console.log('id do recurso>:', id);
+    @Patch('/:id')
+    public async pathBlocks() {}
 
-        const listUserService = new PatchClassesBlockService();
-
-        const result = await listUserService.execute(id, body);
-
-        return result; */
-    }
-
-    @Delete('/')
-    public async removeBlock(
-        @Query('id') id: number,
-    ): Promise<Error | ClassesBlock> {
-        console.log('id do recurso>:', id);
-
-        const listUserService = new DeleteClassesBlockService();
-
-        const result = await listUserService.execute(id);
-
-        return result;
+    @Delete('/:id')
+    public async removeBlock(req: Request, res: Response) {
+        const { id } = req.params;
     }
 }
