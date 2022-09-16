@@ -1,8 +1,4 @@
-import dotenv from 'dotenv';
-
-dotenv.config({
-    path: __dirname + '/.env',
-});
+import 'dotenv/config';
 
 import 'reflect-metadata';
 import 'express-async-errors';

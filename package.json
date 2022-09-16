@@ -17,7 +17,7 @@
         "JWT"
     ],
     "scripts": {
-        "start": "dotenv -e ./src/.env -- node dist/index.js",
+        "start": "node dist/index.js",
         "dev": "nodemon",
         "prebuild": "npm run swagger",
         "build": "tsc --project tsconfig.json",
@@ -32,11 +32,14 @@
         "typeorm": "dotenv -e .env -- ts-node-dev node_modules/.bin/typeorm",
         "typeorm:migration": "dotenv -e .env -- bash -c 'ts-node-dev node_modules/typeorm/cli.js migration:create $TYPEORM_MIGRATIONS_DIR/default'",
         "typeorm:up": "dotenv -e .env -- ts-node-dev node_modules/typeorm/cli.js migration:run -d src/infra/database/dataSource.ts ",
-        "typeorm:generate": "dotenv -e .env -- ts-node-dev node_modules/typeorm/cli.js migration:generate -d src/infra/database/dataSource.ts src/infra/database/migrations/default"
+        "typeorm:generate": "dotenv -e .env -- ts-node-dev node_modules/typeorm/cli.js migration:generate -d src/infra/database/dataSource.ts src/infra/database/migrations/default",
+        "docker:dev": "docker compose --file docker-compose.yml --file docker-compose.dev.yml --compatibility up --build",
+        "docker:stage": "docker compose --file docker-compose.yml --file docker-compose.stage.yml --compatibility up --build"
     },
     "devDependencies": {
         "@commitlint/cli": "^17.1.2",
         "@commitlint/config-conventional": "^17.1.0",
+        "@dotenv/cli": "^2.2.2",
         "@types/bcryptjs": "^2.4.2",
         "@types/cors": "^2.8.12",
         "@types/dotenv": "^8.2.0",
