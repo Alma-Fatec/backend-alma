@@ -2,5 +2,5 @@
     "watch": ["src"],
     "ext": "ts,json",
     "ignore": ["src/**/*.spec.ts"],
-    "exec": "dotenv -e .env -- ts-node-dev --inspect --respawn --transpile-only src/index.ts"
+    "exec": "ts-node-dev --inspect --respawn --transpile-only src/index.ts"
 }

@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 
 export class ApiError extends Error {
     public readonly statusCode: number;

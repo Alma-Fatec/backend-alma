@@ -14,7 +14,8 @@ export const ensuredAuthenticated = () => {
         try {
             verify(token, String(process.env.APP_SECRET));
 
-            const {sub} = decode(token);
+            //@ts-ignore
+            const { sub } = decode(token);
 
             //@ts-ignore
             request.userId = sub;

@@ -8,9 +8,8 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile.dev
+    build: .
+      
     volumes:
       - ./src:/app/src
     ports:

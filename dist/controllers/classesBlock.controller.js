@@ -8,67 +8,74 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var __param = (this && this.__param) || function (paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const tsoa_1 = require("tsoa");
-const createClassesBlock_service_1 = require("../services/classesBlock/createClassesBlock.service");
-const deleteClassesBlock_service_1 = require("../services/classesBlock/deleteClassesBlock.service");
-const listClassesBlock_service_1 = require("../services/classesBlock/listClassesBlock.service");
-const patchClassesBlock_service_1 = require("../services/classesBlock/patchClassesBlock.service");
+const typeorm_1 = require("typeorm");
+const yup_1 = require("yup");
+const error_1 = require("../middlewares/error");
+const block_repository_1 = require("../repositories/block.repository");
+const user_repository_1 = require("../repositories/user.repository");
+const classesBlock_1 = require("../validators/classesBlock");
+const baseUrl = `http://localhost:${process.env.PORT}`;
 let ClassesBlockController = class ClassesBlockController {
-    async create(req) {
+    async create(req, res) {
         var _a;
-        const createClassesBlockService = new createClassesBlock_service_1.CreateClassesBlockService();
-        const result = await createClassesBlockService.execute(Object.assign(Object.assign({}, req.body), { cover: `http://${process.env.HOST}:${process.env.PORT}/${(_a = req.file) === null || _a === void 0 ? void 0 : _a.path}` ||
-                '' }));
-        return result;
+        const { body, file } = req;
+        try {
+            await classesBlock_1.classesBlockSchema.validate(body);
+        }
+        catch (error) {
+            if (error instanceof yup_1.ValidationError) {
+                throw new error_1.ApiError(error.errors.join(' '), 400);
+            }
+        }
+        const userIds = (_a = body.user) !== null && _a !== void 0 ? _a : [];
+        console.log(file);
+        const users = await user_repository_1.userRepository.findBy({ id: (0, typeorm_1.In)(userIds) });
+        const block = block_repository_1.blockRepository.create(Object.assign(Object.assign({}, body), { cover: `${baseUrl}/${file === null || file === void 0 ? void 0 : file.path}` || '', users }));
+        const result = await block_repository_1.blockRepository.save(block);
+        return res.status(201).json(Object.assign(Object.assign({}, result), { users: userIds }));
     }
-    async getBlocks() {
-        const listUserService = new listClassesBlock_service_1.ListClassesBlockService();
-        const result = await listUserService.execute();
-        return result;
+    async getBlocks(req, res) {
+        const page = Number(req.query.page) || 1;
+        const limit = Number(req.query.limit) || 10;
+        const blocks = await block_repository_1.blockRepository.find({
+            skip: (page - 1) * limit,
+            take: limit,
+        });
+        return res.json({
+            page,
+            limit,
+            blocks,
+        });
     }
-    async pathBlocks(id, body) {
-        console.log('id do recurso>:', id);
-        const listUserService = new patchClassesBlock_service_1.PatchClassesBlockService();
-        const result = await listUserService.execute(id, body);
-        return result;
-    }
-    async removeBlock(id) {
-        console.log('id do recurso>:', id);
-        const listUserService = new deleteClassesBlock_service_1.DeleteClassesBlockService();
-        const result = await listUserService.execute(id);
-        return result;
+    async pathBlocks() { }
+    async removeBlock(req, res) {
+        const { id } = req.params;
     }
 };
 __decorate([
     (0, tsoa_1.Post)('/'),
-    __param(0, (0, tsoa_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
 ], ClassesBlockController.prototype, "create", null);
 __decorate([
     (0, tsoa_1.Get)('/'),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
 ], ClassesBlockController.prototype, "getBlocks", null);
 __decorate([
-    (0, tsoa_1.Patch)('/'),
-    __param(0, (0, tsoa_1.Query)('id')),
-    __param(1, (0, tsoa_1.Body)()),
+    (0, tsoa_1.Patch)('/:id'),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, Object]),
+    __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], ClassesBlockController.prototype, "pathBlocks", null);
 __decorate([
-    (0, tsoa_1.Delete)('/'),
-    __param(0, (0, tsoa_1.Query)('id')),
+    (0, tsoa_1.Delete)('/:id'),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number]),
+    __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
 ], ClassesBlockController.prototype, "removeBlock", null);
 ClassesBlockController = __decorate([

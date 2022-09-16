@@ -7,7 +7,7 @@ const express_1 = require("express");
 const ping_controller_1 = __importDefault(require("../controllers/ping.controller"));
 const user_routes_1 = __importDefault(require("./user.routes"));
 const session_routes_1 = __importDefault(require("./session.routes"));
-const classesBlock_routes_1 = __importDefault(require("./classesBlock.routes"));
+const block_routes_1 = __importDefault(require("./block.routes"));
 const router = (0, express_1.Router)();
 router.get('/', (_req, res) => {
     res.json({ message: 'Welcome to the API!' });
@@ -19,5 +19,5 @@ router.get('/ping', async (_req, res) => {
 });
 router.use('/users', user_routes_1.default);
 router.use('/session', session_routes_1.default);
-router.use('/classesBlock', classesBlock_routes_1.default);
+router.use('/classesBlock', block_routes_1.default);
 exports.default = router;

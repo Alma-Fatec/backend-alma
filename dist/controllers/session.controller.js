@@ -8,28 +8,62 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var __param = (this && this.__param) || function (paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SessionController = void 0;
+const bcryptjs_1 = require("bcryptjs");
+const jsonwebtoken_1 = require("jsonwebtoken");
 const tsoa_1 = require("tsoa");
-const CreateSessionService_1 = require("../services/session/CreateSessionService");
+const error_1 = require("../middlewares/error");
+const user_repository_1 = require("../repositories/user.repository");
 let SessionController = class SessionController {
-    async handle(body) {
-        const { email, password } = body;
-        const sessionService = new CreateSessionService_1.CreateSessionService();
-        const result = await sessionService.execute({ email, password });
-        return result;
+    async login(req, res) {
+        const { email, password } = req.body;
+        const user = await user_repository_1.userRepository.findOne({
+            select: ['id', 'name', 'email', 'password', 'socialName', 'phone'],
+            where: { email },
+        });
+        if (!user) {
+            throw new error_1.ApiError('Esse usuário não existe.', 400);
+        }
+        const passwordMatch = await (0, bcryptjs_1.compare)(password, user.password);
+        if (!passwordMatch) {
+            throw new error_1.ApiError('Usuário ou senha incorretos.', 400);
+        }
+        const token = (0, jsonwebtoken_1.sign)({}, String(process.env.APP_SECRET), {
+            subject: user.id,
+            expiresIn: '7h',
+        });
+        //@ts-ignore
+        delete user.password;
+        return res.status(201).json({ token, user });
+    }
+    async refresh(req, res) {
+        const { user_id } = req.body;
+        const user = await user_repository_1.userRepository.findOne({
+            where: { id: user_id },
+        });
+        if (!user) {
+            throw new error_1.ApiError('Esse usuário não existe.', 400);
+        }
+        const refreshToken = (0, jsonwebtoken_1.sign)({}, String(process.env.APP_SECRET), {
+            subject: user.id,
+            expiresIn: '7h',
+        });
+        return res.status(201).json({ token: refreshToken });
     }
 };
 __decorate([
     (0, tsoa_1.Post)('/login'),
-    __param(0, (0, tsoa_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
-], SessionController.prototype, "handle", null);
+], SessionController.prototype, "login", null);
+__decorate([
+    (0, tsoa_1.Post)('/refresh'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], SessionController.prototype, "refresh", null);
 SessionController = __decorate([
     (0, tsoa_1.Route)('session'),
     (0, tsoa_1.Tags)('Session')

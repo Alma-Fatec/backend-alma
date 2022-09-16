@@ -17,7 +17,7 @@
         "JWT"
     ],
     "scripts": {
-        "start": "ts-node src/index.ts",
+        "start": "dotenv -e ./src/.env -- node dist/index.js",
         "dev": "nodemon",
         "prebuild": "npm run swagger",
         "build": "tsc --project tsconfig.json",
@@ -60,6 +60,7 @@
         "husky": "^8.0.1",
         "jest": "^28.1.1",
         "nodemon": "^2.0.19",
+        "pm2": "^5.2.0",
         "prettier": "^2.5.1",
         "ts-jest": "^28.0.5",
         "ts-node": "10.7.0",

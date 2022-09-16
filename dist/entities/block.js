@@ -9,11 +9,11 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.User = void 0;
+exports.Block = void 0;
 const typeorm_1 = require("typeorm");
 const uuid_1 = require("uuid");
-const block_1 = require("./block");
-let User = class User {
+const user_1 = require("./user");
+let Block = class Block {
     // write constructor to initialize the properties of the class with the values passed in the constructor parameters
     constructor(props, id) {
         Object.assign(this, props);
@@ -25,45 +25,30 @@ let User = class User {
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)('uuid'),
     __metadata("design:type", String)
-], User.prototype, "id", void 0);
+], Block.prototype, "id", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: 'text' }),
     __metadata("design:type", String)
-], User.prototype, "name", void 0);
+], Block.prototype, "title", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: 'text' }),
     __metadata("design:type", String)
-], User.prototype, "socialName", void 0);
+], Block.prototype, "description", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: 'text' }),
     __metadata("design:type", String)
-], User.prototype, "cpf", void 0);
+], Block.prototype, "cover", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'text' }),
-    __metadata("design:type", String)
-], User.prototype, "phone", void 0);
+    (0, typeorm_1.Column)({ type: 'date', default: new Date() }),
+    __metadata("design:type", Date)
+], Block.prototype, "createdAt", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'text' }),
-    __metadata("design:type", String)
-], User.prototype, "email", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ type: 'text' }),
-    __metadata("design:type", String)
-], User.prototype, "password", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ type: 'boolean' }),
-    __metadata("design:type", Boolean)
-], User.prototype, "isActive", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ type: 'text' }),
-    __metadata("design:type", String)
-], User.prototype, "role", void 0);
-__decorate([
-    (0, typeorm_1.ManyToMany)(() => block_1.Block, (block) => block.users),
+    (0, typeorm_1.ManyToMany)(() => user_1.User, (user) => user.blocks, { cascade: true }),
+    (0, typeorm_1.JoinTable)(),
     __metadata("design:type", Array)
-], User.prototype, "blocks", void 0);
-User = __decorate([
-    (0, typeorm_1.Entity)('user'),
+], Block.prototype, "users", void 0);
+Block = __decorate([
+    (0, typeorm_1.Entity)('block'),
     __metadata("design:paramtypes", [Object, String])
-], User);
-exports.User = User;
+], Block);
+exports.Block = Block;

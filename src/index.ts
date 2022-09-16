@@ -1,9 +1,14 @@
+import dotenv from 'dotenv';
+
+dotenv.config({
+    path: __dirname + '/.env',
+});
+
 import 'reflect-metadata';
 import 'express-async-errors';
 
 import express, { Application } from 'express';
 import morgan from 'morgan';
-import dotenv from 'dotenv';
 import routes from './routes';
 import { errorMiddleware } from './middlewares/error';
 
@@ -11,10 +16,6 @@ import swaggerUi from 'swagger-ui-express';
 import cors from 'cors';
 
 const whitelist = ['*'];
-
-dotenv.config({
-    path: process.env.NODE_ENV === 'development' ? '.env' : '.env.prod',
-});
 
 import './infra/database/dataSource';
 
