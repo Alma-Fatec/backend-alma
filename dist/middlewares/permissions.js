@@ -9,6 +9,7 @@ exports.checkPermissions = void 0;
 const user_repository_1 = require("../repositories/user.repository");
 const checkPermissions = (permissions) => {
     return async (req, res, next) => {
+        //@ts-ignore
         const { userId } = req;
         const user = await user_repository_1.userRepository.findOne({
             where: { id: userId },

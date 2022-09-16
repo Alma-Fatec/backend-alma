@@ -11,6 +11,7 @@ const ensuredAuthenticated = () => {
         const [, token] = authHeaders.split(' ');
         try {
             (0, jsonwebtoken_1.verify)(token, String(process.env.APP_SECRET));
+            //@ts-ignore
             const { sub } = (0, jsonwebtoken_1.decode)(token);
             //@ts-ignore
             request.userId = sub;
