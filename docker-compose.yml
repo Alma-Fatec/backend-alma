@@ -30,14 +30,13 @@ services:
   certbot:
     image: certbot/certbot
     container_name: certbot
-    restart: on-failure
     volumes:
       - certbot-etc:/etc/letsencrypt
       - certbot-var:/var/lib/letsencrypt
-      - web-root:/var/www/certbot
+      - web-root:/var/www/html
     depends_on:
       - webserver
-    command: certonly --webroot --webroot-path=/var/www/ --email ryan.professional.md@gmail.com --agree-tos --no-eff-email -d projetoalma.live -d www.projetoalma.live
+    command: certonly --staging --webroot --webroot-path=/var/www/html --email ryan.professional.md@gmail.com --agree-tos --no-eff-email -d projetoalma.live -d www.projetoalma.live
   
 
 volumes:
@@ -47,7 +46,7 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: /home
+      device: /home/ryan/Documents/alma/backend-alma/cert
       o: bind
 
 networks:
