@@ -1,54 +1,33 @@
-version: "3"
+version: '3'
 
 services:
-  be_boilerplate:
-    container_name: 'be_boilerplate'
-    build: .
+
+  backend:
+      container_name: backend-alma
+      build: .
+      restart: always
+      entrypoint: /bin/sh './scripts/be-node-dev.sh'
+      env_file:
+        - .env
+      ports:
+        - '3333:3333'
+      depends_on:
+        - db_postgres
+      links:
+        - db_postgres
+      volumes:
+        - .:/app/
+        - /app/node_modules
+
+      
+  db_postgres:
+    container_name: 'postgres'
+    image: 'postgres:14.2-alpine'
     restart: always
-    volumes:
-      - .:/app/
-      - /app/node_modules
-    networks:
-      - app-network
-
-  webserver:
-    image: nginx:mainline-alpine
-    container_name: webserver
-    restart: unless-stopped
+    env_file:
+      - .env
     ports:
-      - "80:80"
-    volumes:
-      - web-root:/var/www/html
-      - ./nginx-conf:/etc/nginx/conf.d
-      - certbot-etc:/etc/letsencrypt
-      - certbot-var:/var/lib/letsencrypt
-    depends_on:
-      - be_boilerplate
-    networks:
-      - app-network
+      - '5432:5432'
 
-  certbot:
-    image: certbot/certbot
-    container_name: certbot
-    volumes:
-      - certbot-etc:/etc/letsencrypt
-      - certbot-var:/var/lib/letsencrypt
-      - web-root:/var/www/html
-    depends_on:
-      - webserver
-    command: certonly --staging --webroot --webroot-path=/var/www/html --email ryan.professional.md@gmail.com --agree-tos --no-eff-email -d projetoalma.live -d www.projetoalma.live
-  
-
-volumes:
-  certbot-etc:
-  certbot-var:
-  web-root:
-    driver: local
-    driver_opts:
-      type: none
-      device: /home/ryan/Documents/alma/backend-alma/cert
-      o: bind
-
-networks:
-  app-network:
-    driver: bridge
+ 
+    

@@ -33,8 +33,8 @@
         "typeorm:migration": "dotenv -e .env -- bash -c 'ts-node-dev node_modules/typeorm/cli.js migration:create $TYPEORM_MIGRATIONS_DIR/default'",
         "typeorm:up": "dotenv -e .env -- ts-node-dev node_modules/typeorm/cli.js migration:run -d src/infra/database/dataSource.ts ",
         "typeorm:generate": "dotenv -e .env -- ts-node-dev node_modules/typeorm/cli.js migration:generate -d src/infra/database/dataSource.ts src/infra/database/migrations/default",
-        "docker:dev": "docker compose --file docker-compose.yml --file docker-compose.dev.yml --compatibility up --build",
-        "docker:stage": "docker compose --file docker-compose.yml --file docker-compose.stage.yml --compatibility up --build"
+        "docker:dev": "docker compose --file docker-compose.yml --compatibility up --build",
+        "docker:stage": "docker compose --file docker-compose.yml --compatibility up --build"
     },
     "devDependencies": {
         "@commitlint/cli": "^17.1.2",
