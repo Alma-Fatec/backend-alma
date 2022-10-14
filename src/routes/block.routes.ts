@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import ClassesBlockController from '../controllers/classesBlock.controller';
-import uploadService from '../services/upload';
+import uploadService from '../infra/upload';
 
 const router = Router();
 const controller = new ClassesBlockController();

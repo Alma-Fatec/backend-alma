@@ -1,6 +1,6 @@
 import express from 'express';
 import ClassesController from '../controllers/classes.controller';
-import uploadService from '../services/upload';
+import uploadService from '../infra/upload';
 
 const router = express.Router();
 const controller = new ClassesController();

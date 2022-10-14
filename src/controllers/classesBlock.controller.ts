@@ -1,18 +1,13 @@
-import { ClassesBlock, Users } from '@prisma/client';
+import { ClassesBlock } from '@prisma/client';
 import { Request, Response } from 'express';
-import { Body, Delete, Get, Patch, Post, Query, Route, Tags } from 'tsoa';
+import { Delete, Get, Patch, Post, Route, Tags } from 'tsoa';
 import { In } from 'typeorm';
 import { ValidationError } from 'yup';
 import { ApiError } from '../middlewares/error';
 import { blockRepository } from '../repositories/block.repository';
 import { userRepository } from '../repositories/user.repository';
-import { CreateClassesBlockService } from '../services/classesBlock/createClassesBlock.service';
-import { DeleteClassesBlockService } from '../services/classesBlock/deleteClassesBlock.service';
-import { ListClassesBlockService } from '../services/classesBlock/listClassesBlock.service';
-import { PatchClassesBlockService } from '../services/classesBlock/patchClassesBlock.service';
 import { classesBlockSchema } from '../validators/classesBlock';
 
-const baseUrl = `http://localhost:${process.env.PORT}`;
 interface CreateBlockRequest {
     body: ClassesBlock;
     file: Express.Multer.File;
@@ -40,7 +35,8 @@ export default class ClassesBlockController {
 
         const block = blockRepository.create({
             ...body,
-            cover: `${baseUrl}/${file?.path}` || '',
+            //@ts-ignore
+            cover: file?.location ?? '',
             users,
         });
 
@@ -53,7 +49,6 @@ export default class ClassesBlockController {
     public async getBlocks(req: Request, res: Response) {
         const page = Number(req.query.page) || 1;
         const limit = Number(req.query.limit) || 10;
-
 
         const blocks = await blockRepository.find({
             skip: (page - 1) * limit,

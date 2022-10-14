@@ -7,7 +7,7 @@ import ClassesBlockRouter from './block.routes';
 const router = Router();
 
 router.get('/', (_req, res) => {
-    res.json({ message: 'Seja bem viao à API!' });
+    res.json({ message: 'olá mundo!' });
 });
 
 router.get('/ping', async (_req, res) => {
