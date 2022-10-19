@@ -18,7 +18,7 @@
     ],
     "scripts": {
         "start": "node dist/index.js",
-        "dev": "nodemon",
+        "dev": "nodemon -L",
         "prebuild": "npm run swagger",
         "build": "tsc --project tsconfig.json",
         "postbuild": "cp -r ./public ./dist",
@@ -57,6 +57,7 @@
         "commitizen": "^4.2.5",
         "concurrently": "^7.2.2",
         "cz-conventional-changelog": "3.3.0",
+        "dotenv-cli": "^6.0.0",
         "eslint": "^8.10.0",
         "eslint-config-prettier": "^8.5.0",
         "eslint-plugin-prettier": "^4.0.0",

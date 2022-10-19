@@ -8,10 +8,6 @@ import { blockRepository } from '../repositories/block.repository';
 import { userRepository } from '../repositories/user.repository';
 import { classesBlockSchema } from '../validators/classesBlock';
 
-interface CreateBlockRequest {
-    body: ClassesBlock;
-    file: Express.Multer.File;
-}
 @Route('classesBlock')
 @Tags('classesBlock')
 export default class ClassesBlockController {
@@ -26,17 +22,14 @@ export default class ClassesBlockController {
                 throw new ApiError(error.errors.join(' '), 400);
             }
         }
-
-        const userIds = body.user ?? [];
-
-        console.log(file);
+        const userIds = body.users ?? [];
 
         const users = await userRepository.findBy({ id: In(userIds) });
 
         const block = blockRepository.create({
             ...body,
             //@ts-ignore
-            cover: file?.location ?? '',
+            cover: file?.location ?? null,
             users,
         });
 
@@ -53,6 +46,7 @@ export default class ClassesBlockController {
         const blocks = await blockRepository.find({
             skip: (page - 1) * limit,
             take: limit,
+            relations: ['users'],
         });
 
         return res.json({
@@ -62,11 +56,72 @@ export default class ClassesBlockController {
         });
     }
 
+    @Get('/:id')
+    public async getBlock(req: Request, res: Response) {
+        const { id } = req.params;
+
+        const block = await blockRepository.findOne({
+            where: { id },
+            relations: ['users'],
+        });
+
+        if (!block) {
+            throw new ApiError('Esse bloco não existe.', 400);
+        }
+
+        return res.json(block);
+    }
+
     @Patch('/:id')
-    public async pathBlocks() {}
+    public async pathBlocks(req: Request, res: Response) {
+        const { body, file, params } = req;
+
+        try {
+            await classesBlockSchema.validate(body);
+        } catch (error) {
+            if (error instanceof ValidationError) {
+                throw new ApiError(error.errors.join(' '), 400);
+            }
+        }
+
+        const block = await blockRepository.findOne({
+            where: { id: String(params.id) },
+            relations: ['users'],
+        });
+
+        if (!block) {
+            throw new ApiError('Esse bloco não existe.', 400);
+        }
+
+        const userIds = body.users ?? [];
+
+        const users = await userRepository.findBy({ id: In(userIds) });
+
+        // update block with request data, keep the same cover if no new file is provided, keep the same users if no new users are provided,
+        const updatedBlock = blockRepository.merge(block, {
+            ...body,
+            //@ts-ignore
+            cover: file?.location ?? block.cover,
+            users,
+        });
+
+        return res.json({ ...updatedBlock });
+    }
 
     @Delete('/:id')
     public async removeBlock(req: Request, res: Response) {
         const { id } = req.params;
+
+        const block = await blockRepository.findOne({
+            where: { id },
+        });
+
+        if (!block) {
+            throw new ApiError('Esse bloco não existe.', 400);
+        }
+
+        await blockRepository.remove(block);
+
+        return res.status(204).send();
     }
 }

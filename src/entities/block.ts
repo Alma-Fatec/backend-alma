@@ -28,7 +28,7 @@ export class Block {
     @Column({ type: 'text' })
     description: string;
 
-    @Column({ type: 'text' })
+    @Column({ type: 'text', nullable: true })
     cover: string;
 
     @Column({ type: 'date', default: new Date() })
