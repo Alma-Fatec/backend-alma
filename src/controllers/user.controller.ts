@@ -7,52 +7,21 @@ import { Roles } from '../entities/roles';
 import { ApiError } from '../middlewares/error';
 import { userRepository } from '../repositories/user.repository';
 import { userSchema } from '../validators/user';
+import { CreateUserService } from '../services/user/createUser.service';
 
 const roles: Roles[] = ['Admin', 'Student', 'Teacher'];
+
+const createUserService = new CreateUserService();
+
 @Route('users')
 @Tags('User')
 export default class UserController {
     protected userTable = userRepository;
-
     @Post('/')
     async create(req: Request, res: Response) {
         const { body }: { body: User } = req;
 
-        try {
-            userSchema.validateSync(body);
-        } catch (error) {
-            if (error instanceof ValidationError) {
-                throw new ApiError(error.errors.join(' '), 400);
-            }
-        }
-
-        const emailAlreadyExists = await userRepository.findOne({
-            where: { email: body.email },
-        });
-
-        if (emailAlreadyExists) {
-            throw new ApiError('Esse email já está em uso', 400);
-        }
-
-        const cpfAlreadyExists = await userRepository.findOne({
-            where: { cpf: String(body.cpf) },
-        });
-
-        if (cpfAlreadyExists) {
-            throw new ApiError('Esse cpf já foi cadastrado', 400);
-        }
-
-        const passwordHash = await hash(body.password, 8);
-
-        const user = await userRepository.create({
-            ...body,
-            cpf: String(body.cpf),
-            password: passwordHash,
-            isActive: true,
-            role: 'Student',
-        });
-
-        const result = await userRepository.save(user);
+        const result = await createUserService.execute(body);
 
         return res.status(201).json(result);
     }

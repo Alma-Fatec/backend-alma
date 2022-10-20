@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import { sign } from 'jsonwebtoken';
 import { Post, Route, Tags } from 'tsoa';
 import { ApiError } from '../middlewares/error';
+import { blockRepository } from '../repositories/block.repository';
 import { userRepository } from '../repositories/user.repository';
 
 interface LoginInfo {
@@ -18,7 +19,6 @@ export class SessionController {
         const { email, password } = req.body;
 
         const user = await userRepository.findOne({
-            select: ['id', 'name', 'email', 'password', 'socialName', 'phone'],
             where: { email },
         });
 
@@ -37,9 +37,11 @@ export class SessionController {
             expiresIn: '7h',
         });
 
-        //@ts-ignore
-        delete user.password;
-        return res.status(201).json({ token, user });
+        const blocks = await blockRepository.find({
+            where: { users: { id: user?.id } },
+        });
+
+        return res.status(201).json({ token, user: { ...user, blocks } });
     }
 
     @Post('/refresh')

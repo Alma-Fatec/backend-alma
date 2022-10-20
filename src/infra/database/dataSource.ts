@@ -9,6 +9,7 @@ console.log('migrations path: ', migrationsPath);
 console.log('entity path: ', entitiesPath);
 console.log('db_port: ', port);
 console.log('host: ', process.env.DB_HOST);
+
 export const AppDataSource = new DataSource({
     type: 'postgres',
     host: process.env.DB_HOST,

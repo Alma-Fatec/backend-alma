@@ -2,11 +2,13 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppDataSource = void 0;
 const typeorm_1 = require("typeorm");
-const port = process.env.DB_PORT || 55003;
+const port = process.env.DB_PORT || 5432;
 const migrationsPath = process.env.TYPEORM_MIGRATIONS_DIR;
 const entitiesPath = process.env.TYPEORM_MIGRATIONS;
 console.log('migrations path: ', migrationsPath);
 console.log('entity path: ', entitiesPath);
+console.log('db_port: ', port);
+console.log('host: ', process.env.DB_HOST);
 exports.AppDataSource = new typeorm_1.DataSource({
     type: 'postgres',
     host: process.env.DB_HOST,
@@ -14,7 +16,6 @@ exports.AppDataSource = new typeorm_1.DataSource({
     username: process.env.DB_USER,
     password: process.env.DB_PASS,
     database: process.env.DB_NAME,
-    url: process.env.TYPEORM_URL,
     entities: [entitiesPath],
     migrations: [`${__dirname}/migrations/*{.ts,.js}`],
 });

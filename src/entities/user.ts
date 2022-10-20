@@ -54,4 +54,10 @@ export class User {
             this.id = v4();
         }
     }
+
+    toJSON() {
+        //@ts-ignore
+        delete this.password;
+        return this;
+    }
 }

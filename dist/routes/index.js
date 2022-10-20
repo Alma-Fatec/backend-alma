@@ -10,7 +10,7 @@ const session_routes_1 = __importDefault(require("./session.routes"));
 const block_routes_1 = __importDefault(require("./block.routes"));
 const router = (0, express_1.Router)();
 router.get('/', (_req, res) => {
-    res.json({ message: 'Welcome to the API!' });
+    res.json({ message: 'Seja bem viao à API!' });
 });
 router.get('/ping', async (_req, res) => {
     const controller = new ping_controller_1.default();
