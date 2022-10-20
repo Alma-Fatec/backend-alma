@@ -17,17 +17,18 @@ import './infra/database/dataSource';
 
 const app: Application = express();
 
+
+app.use(cors({
+    origin: ['http://localhost:3000', '*'],
+    optionSuccessStatus: 200,
+}))
+
 app.use(express.json());
 
 app.use(morgan('dev'));
 app.use(express.static('public'));
 app.use('/uploads', express.static('uploads'));
 
-app.use(
-    cors({
-        origin: whitelist,
-    }),
-);
 
 app.use(routes);
 app.use(errorMiddleware);
