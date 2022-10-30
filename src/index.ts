@@ -11,24 +11,21 @@ import { errorMiddleware } from './middlewares/error';
 import swaggerUi from 'swagger-ui-express';
 import cors from 'cors';
 
-const whitelist = ['*'];
-
 import './infra/database/dataSource';
 
 const app: Application = express();
 
-
-app.use(cors({
-    origin: ['http://localhost:3000', '*'],
-    optionSuccessStatus: 200,
-}))
+app.use(
+    cors({
+        origin: ['http://localhost:3000', '*'],
+    }),
+);
 
 app.use(express.json());
 
 app.use(morgan('dev'));
 app.use(express.static('public'));
 app.use('/uploads', express.static('uploads'));
-
 
 app.use(routes);
 app.use(errorMiddleware);
@@ -46,3 +43,5 @@ app.use(
 app.listen(process.env.PORT, () => {
     console.log(`🦜: App rodando em http://localhost:${process.env.PORT}`);
 });
+
+export default app;

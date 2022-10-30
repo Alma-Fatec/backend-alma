@@ -6,10 +6,6 @@ import { ApiError } from '../middlewares/error';
 import { blockRepository } from '../repositories/block.repository';
 import { userRepository } from '../repositories/user.repository';
 
-interface LoginInfo {
-    email: string;
-    password: string;
-}
 
 @Route('session')
 @Tags('Session')
