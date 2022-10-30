@@ -42,11 +42,19 @@ export default class ClassesBlockController {
     public async getBlocks(req: Request, res: Response) {
         const page = Number(req.query.page) || 1;
         const limit = Number(req.query.limit) || 10;
+        const user_ids = (req.query.user_ids as string)?.split(',') || [];
+
+        //?user_ids=d3ef5420-263c-453b-9e7e-92ab80171850
+
+        const where = user_ids.length > 0 ? { id: In(user_ids) } : {};
 
         const blocks = await blockRepository.find({
             skip: (page - 1) * limit,
             take: limit,
             relations: ['users'],
+            where: {
+                users: where,
+            },
         });
 
         return res.json({
