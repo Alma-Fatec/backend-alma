@@ -1,16 +1,19 @@
-import { Classes } from '@prisma/client';
-import prisma from '../prisma';
+import { Class } from '../../entities/class';
+import { classRepository } from '../../repositories/class.repository';
 
 export class CreateClassesService {
-    protected prisma = prisma;
+    async execute(classes: Class) {
+        const maxOrder = await classRepository.query(
+            'SELECT MAX("order") FROM class',
+        );
 
-    async execute(classes: Classes): Promise<Classes | Error> {
-        const block = await this.prisma.classes.create({
-            data: {
-                ...classes,
-            },
+        const newClass = classRepository.create({
+            ...classes,
+            order: maxOrder[0].max + 1,
         });
 
-        return block;
+        await classRepository.save(newClass);
+
+        return newClass;
     }
 }

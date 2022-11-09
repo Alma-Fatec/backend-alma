@@ -1,12 +1,9 @@
-import { hash } from 'bcryptjs';
 import { Request, Response } from 'express';
 import { Get, Patch, Post, Route, Tags } from 'tsoa';
-import { ValidationError } from 'yup';
-import { User } from '../entities/user';
 import { Roles } from '../entities/roles';
+import { User } from '../entities/user';
 import { ApiError } from '../middlewares/error';
 import { userRepository } from '../repositories/user.repository';
-import { userSchema } from '../validators/user';
 import { CreateUserService } from '../services/user/createUser.service';
 
 const roles: Roles[] = ['Admin', 'Student', 'Teacher'];

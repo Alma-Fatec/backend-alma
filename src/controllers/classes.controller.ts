@@ -1,27 +1,23 @@
-import { Classes, Users } from '@prisma/client';
-import { Body, Delete, Get, Patch, Post, Query, Route, Tags } from 'tsoa';
+import { Request, Response } from 'express';
+import { Post, Route, Tags } from 'tsoa';
+import { Class } from '../entities/class';
 import { CreateClassesService } from '../services/classes/createClasses.service';
-import { DeleteClassesService } from '../services/classes/deleteClasses.service';
-import { ListClassesService } from '../services/classes/listClasses.service';
-import { PatchClassesService } from '../services/classes/patchClasses.service';
-import { CreateUserService } from '../services/user/createUser.service';
-import { ListUserService } from '../services/user/listUser.service';
+
+const createClassesService = new CreateClassesService();
 
 @Route('classes')
 @Tags('classes')
 export default class ClassesController {
     @Post('/')
-    public async create(@Body() body: Classes): Promise<Error | Classes> {
-        const createClassesService = new CreateClassesService();
+    public async create(req: Request, res: Response) {
+        const { body }: { body: Class } = req;
 
-        const result = await createClassesService.execute({
-            ...body,
-        });
+        const result = await createClassesService.execute(body);
 
-        return result;
+        return res.status(201).json(result);
     }
 
-    @Get('/')
+   /*  @Get('/')
     public async getClasses(): Promise<Error | Classes[]> {
         const listUserService = new ListClassesService();
 
@@ -55,5 +51,5 @@ export default class ClassesController {
         const result = await listUserService.execute(id);
 
         return result;
-    }
+    } */
 }

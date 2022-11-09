@@ -1,4 +1,8 @@
-import 'dotenv/config';
+import * as dotenv from 'dotenv';
+
+dotenv.config({
+    path: process.env.NODE_ENV === 'development' ? 'dev.env' : '.env',
+});
 
 import 'reflect-metadata';
 import 'express-async-errors';

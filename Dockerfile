@@ -15,6 +15,4 @@ RUN npm run build
 
 EXPOSE 3333
 
-ENTRYPOINT ["nodemon", "/app/src/"]  
-
 CMD ["npm", "run", "dev"]

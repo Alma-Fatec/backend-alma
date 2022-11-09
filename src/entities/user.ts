@@ -22,7 +22,7 @@ export class User {
     @Column({ type: 'text' })
     name: string;
 
-    @Column({ type: 'text' })
+    @Column({ type: 'text', nullable: true })
     socialName: string;
 
     @Column({ type: 'text' })

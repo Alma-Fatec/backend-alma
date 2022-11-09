@@ -12,6 +12,7 @@ const s3 = new S3Client({
     },
 });
 
+
 const storage = multerS3({
     s3,
     bucket: process.env.BUCKET_NAME as string,

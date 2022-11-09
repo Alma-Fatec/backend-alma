@@ -29,6 +29,8 @@ export default class ClassesBlockController {
         const block = blockRepository.create({
             ...body,
             //@ts-ignore
+            created_by: req.userId,
+            //@ts-ignore
             cover: file?.location ?? null,
             users,
         });

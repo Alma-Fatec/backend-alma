@@ -3,9 +3,11 @@ import {
     Entity,
     JoinTable,
     ManyToMany,
+    OneToMany,
     PrimaryGeneratedColumn,
 } from 'typeorm';
 import { v4 } from 'uuid';
+import { Class } from './class';
 import { User } from './user';
 
 interface BlockProps {
@@ -38,7 +40,11 @@ export class Block {
     @JoinTable()
     users: User[];
 
-    // write constructor to initialize the properties of the class with the values passed in the constructor parameters
+    @OneToMany(() => Class, (classes) => classes.block, { nullable: true })
+    classes: Class[];
+
+    @Column()
+    created_by: string;
 
     constructor(props: BlockProps, id?: string) {
         Object.assign(this, props);

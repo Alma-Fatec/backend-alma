@@ -7,4 +7,5 @@ temp/
 
 
 .env
+*.env
 database/boilerplate
