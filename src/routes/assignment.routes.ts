@@ -11,21 +11,21 @@ router.get('/:id', controller.getAssignment);
 
 router.post(
     '/',
-    checkPermissions(['Admin', 'Teacher']),
+    //checkPermissions(['Admin', 'Teacher']),
     uploadService.single('cover'),
     controller.create,
 );
 
 router.patch(
     '/:id',
-    checkPermissions(['Admin', 'Teacher']),
+    //checkPermissions(['Admin', 'Teacher']),
     uploadService.single('cover'),
     controller.patchAssignments,
 );
 
 router.delete(
     '/:id',
-    checkPermissions(['Admin', 'Teacher']),
+    //checkPermissions(['Admin', 'Teacher']),
     controller.deleteAssignments,
 );
 

@@ -5,6 +5,7 @@ import ClassesBlockRouter from './block.routes';
 import ClassesRouter from './classes.routes';
 import SessionRouter from './session.routes';
 import UserRouter from './user.routes';
+import AssignmentRouter from './assignment.routes';
 
 const router = Router();
 
@@ -22,5 +23,6 @@ router.use('/users', UserRouter);
 router.use('/session', SessionRouter);
 router.use('/classesBlock', ensuredAuthenticated(), ClassesBlockRouter);
 router.use('/classes', ensuredAuthenticated(), ClassesRouter);
+router.use('/assignments', ensuredAuthenticated(), AssignmentRouter);
 
 export default router;

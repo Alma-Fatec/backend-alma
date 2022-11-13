@@ -11,14 +11,14 @@ router.get('/:id', controller.getBlock);
 
 router.post(
     '/',
-    checkPermissions(['Admin', 'Teacher']),
+    //checkPermissions(['Admin', 'Teacher']),
     uploadService.single('cover'),
     controller.create,
 );
 
 router.patch(
     '/:id',
-    checkPermissions(['Admin', 'Teacher']),
+    //checkPermissions(['Admin', 'Teacher']),
     uploadService.single('cover'),
     controller.pathBlocks,
 );

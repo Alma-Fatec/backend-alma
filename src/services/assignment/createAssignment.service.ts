@@ -1,6 +1,23 @@
-import { Class } from '../../entities/class';
+import { In } from 'typeorm';
+import { Assignment } from '../../entities/assignment';
+import { assignmentRepository } from '../../repositories/assignment.repository';
 import { classRepository } from '../../repositories/class.repository';
 
-export class CreateClassesService {
-    async execute(classes: Class) {}
+export class CreateAssignmentService {
+    async execute(assignment: Assignment) {
+        const classIds = assignment.class ?? [];
+
+        const classes = await classRepository.findBy({
+            id: In(classIds),
+        });
+
+        const newAssignment = assignmentRepository.create({
+            ...assignment,
+            class: classes,
+        });
+
+        await assignmentRepository.save(newAssignment);
+
+        return newAssignment;
+    }
 }
