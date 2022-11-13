@@ -13,4 +13,5 @@ router.post('/', uploadService.single('cover'), controller.create);
 router.patch('/:id', uploadService.single('cover'), controller.patchClasses);
 
 router.delete('/:id', controller.deleteClasses);
+
 export default router;
