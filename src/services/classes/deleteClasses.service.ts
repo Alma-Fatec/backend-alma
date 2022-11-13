@@ -1,14 +1,18 @@
-import { Classes, Users } from '@prisma/client';
-import prisma from '../prisma';
+import { ApiError } from '../../middlewares/error';
+import { classRepository } from '../../repositories/class.repository';
 
-export class DeleteClassesService {
-    protected prisma = prisma;
-
-    async execute(id: number): Promise<Classes | Error> {
-        const block = await this.prisma.classes.delete({
+export class DeleteClassService {
+    async execute(id: number) {
+        const classToDelete = await classRepository.findOne({
             where: { id },
         });
 
-        return block;
+        if (!classToDelete) {
+            throw new ApiError('Classe não encontrada', 404);
+        }
+
+        await classRepository.delete(id);
+
+        return classToDelete;
     }
 }

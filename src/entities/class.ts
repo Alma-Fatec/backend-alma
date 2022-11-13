@@ -17,7 +17,7 @@ export class Class {
     @Column()
     description: string;
 
-    @Column()
+    @Column({ nullable: true })
     cover: string;
 
     // every class may have one block

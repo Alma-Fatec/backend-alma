@@ -5,39 +5,12 @@ import uploadService from '../infra/upload';
 const router = express.Router();
 const controller = new ClassesController();
 
-/* router.get('/', async (req, res) => {
-    const response = await controller.getClasses();
+router.get('/', controller.getClasses);
+router.get('/:id', controller.getClass);
 
-    if (response instanceof Error) {
-        return res.status(400).json({ error: response.message });
-    }
-
-    return res.status(200).send(response);
-});
- */
 router.post('/', uploadService.single('cover'), controller.create);
 
-/* router.patch('/:id', async (req, res) => {
-    const response = await controller.patchClasses(
-        Number(req.params.id),
-        req.body,
-    );
+router.patch('/:id', uploadService.single('cover'), controller.patchClasses);
 
-    if (response instanceof Error) {
-        return res.status(400).json({ error: response.message });
-    }
-
-    return res.status(200).send(response);
-});
-
-router.delete('/:id', async (req, res) => {
-    const response = await controller.removeClasses(Number(req.params.id));
-
-    if (response instanceof Error) {
-        return res.status(400).json({ error: response.message });
-    }
-
-    return res.status(200).send(response);
-});
-*/
+router.delete('/:id', controller.deleteClasses);
 export default router;

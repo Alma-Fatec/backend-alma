@@ -1,7 +1,14 @@
 import { Request, Response } from 'express';
-import { Post, Route, Tags } from 'tsoa';
+import { Delete, Get, Patch, Post, Route, Tags } from 'tsoa';
+import { ValidationError } from 'yup';
 import { Class } from '../entities/class';
+import { ApiError } from '../middlewares/error';
 import { CreateClassesService } from '../services/classes/createClasses.service';
+import { DeleteClassService } from '../services/classes/deleteClasses.service';
+import { FindClassService } from '../services/classes/findClass.service';
+import { ListClassesService } from '../services/classes/listClasses.service';
+import { UpdateClassesService } from '../services/classes/patchClasses.service';
+import { classesSchema } from '../validators/classes';
 
 const createClassesService = new CreateClassesService();
 
@@ -10,46 +17,69 @@ const createClassesService = new CreateClassesService();
 export default class ClassesController {
     @Post('/')
     public async create(req: Request, res: Response) {
-        const { body }: { body: Class } = req;
+        const { body, file } = req;
 
+        try {
+            await classesSchema.validate(body);
+        } catch (error) {
+            if (error instanceof ValidationError) {
+                throw new ApiError(error.errors.join(' '), 400);
+            }
+        }
+
+        // @ts-ignore
+        body.cover = file?.location ?? null;
         const result = await createClassesService.execute(body);
 
         return res.status(201).json(result);
     }
 
-   /*  @Get('/')
-    public async getClasses(): Promise<Error | Classes[]> {
-        const listUserService = new ListClassesService();
+    @Get('/')
+    public async getClasses(req: Request, res: Response) {
+        const page = Number(req.query.page) || 1;
+        const limit = Number(req.query.limit) || 10;
+        const blockId = req.query.blockId as string;
 
-        const result = await listUserService.execute();
+        const result = await new ListClassesService().execute({
+            page,
+            limit,
+            blockId,
+        });
 
-        return result;
+        return res.status(200).json(result);
+    }
+
+    @Get('/:id')
+    public async getClass(req: Request, res: Response) {
+        const { id } = req.params;
+
+        const result = await new FindClassService().execute({
+            id,
+        });
+
+        return res.status(200).json(result);
     }
 
     @Patch('/')
-    public async patchClasses(
-        @Query('id') id: number,
-        @Body() body: Classes,
-    ): Promise<Error | Classes> {
-        console.log('id do recurso>:', id);
+    public async patchClasses(req: Request, res: Response) {
+        const { id } = req.params;
+        const { body, file } = req;
 
-        const listUserService = new PatchClassesService();
+        const result = await new UpdateClassesService().execute({
+            id,
+            body,
+            file,
+        });
 
-        const result = await listUserService.execute(id, body);
-
-        return result;
+        return res.status(200).json(result);
     }
 
-    @Delete('/')
-    public async removeClasses(
-        @Query('id') id: number,
-    ): Promise<Error | Classes> {
-        console.log('id do recurso>:', id);
+    @Delete('/:id')
+    public async deleteClasses(req: Request, res: Response) {
+        const { id } = req.params;
 
-        const listUserService = new DeleteClassesService();
+        const result = await new DeleteClassService().execute(Number(id));
 
-        const result = await listUserService.execute(id);
-
-        return result;
-    } */
+        return res.status(200).json(result);
+    }
 }

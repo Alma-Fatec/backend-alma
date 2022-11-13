@@ -62,7 +62,7 @@ export default class ClassesBlockController {
         return res.json({
             page,
             limit,
-            blocks,
+            data: blocks,
         });
     }
 

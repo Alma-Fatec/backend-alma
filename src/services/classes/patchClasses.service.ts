@@ -1,19 +1,31 @@
-import { Classes, Users } from '@prisma/client';
-import prisma from '../prisma';
+import { Class } from '../../entities/class';
+import { ApiError } from '../../middlewares/error';
+import { classRepository } from '../../repositories/class.repository';
 
-export class PatchClassesService {
-    protected prisma = prisma;
+interface ParamsProps {
+    id: string;
+    body: Class;
+    file?: Express.Multer.File;
+}
+export class UpdateClassesService {
+    async execute(params: ParamsProps) {
+        const { id, body, file } = params;
 
-    async execute(
-        id: number,
-        data: Classes,
-    ): Promise<Classes | Error> {
-
-        const updatedBlock = await this.prisma.classes.update({
-            where: { id: id },
-            data,
+        const classToUpdate = await classRepository.findOne({
+            where: { id: Number(id) },
         });
 
-        return updatedBlock;
+        if (!classToUpdate) {
+            throw new ApiError('Classe não encontrada', 404);
+        }
+
+        const classUpdated = await classRepository.save({
+            ...classToUpdate,
+            ...body,
+            // @ts-ignore
+            cover: file?.location ?? classToUpdate.cover,
+        });
+
+        return classUpdated;
     }
 }
