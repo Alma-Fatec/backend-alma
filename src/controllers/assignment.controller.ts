@@ -22,8 +22,6 @@ export default class AssignmentsController {
         const page = Number(req.query.page) || 1;
         const limit = Number(req.query.limit) || 10;
         const classId = Number(req.query.classId);
-
-        console.log(classId);
         
         const result = await new ListAssignmentService().execute({
             page,
