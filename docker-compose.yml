@@ -3,24 +3,24 @@ version: '3'
 services:
 
   backend:
-      container_name: backend-alma
-      build: .
-      restart: always
-      entrypoint: /bin/sh './scripts/be-node-dev.sh'
-      env_file:
-        - .env
-      ports:
-        - '3333:3333'
-      depends_on:
-        - db_postgres
-      links:
-        - db_postgres
-      volumes:
-        - .:/app/
-        - ./nodemon.json:/app/nodemon.json
+    container_name: backend-alma
+    build: .
+    restart: always
+    entrypoint: /bin/sh './scripts/be-node-dev.sh'
+    env_file:
+      - .env
+    ports:
+      - '3333:3333'
+    depends_on:
+      - db_postgres
+    links:
+      - db_postgres
+    volumes:
+      - .:/app/
+      - ./nodemon.json:/app/nodemon.json
+    variables:
+      NODE_OPTIONS: --max_old_space_size=1536
 
-
-      
   db_postgres:
     container_name: 'postgres'
     image: 'postgres:14.2-alpine'
@@ -36,8 +36,3 @@ services:
     # run ./scripts/db-init.sh to create the database on the first run
     volumes:
       - ./scripts/db-init.sh:/docker-entrypoint-initdb.d/db-init.sh
-
-
-
- 
-    
