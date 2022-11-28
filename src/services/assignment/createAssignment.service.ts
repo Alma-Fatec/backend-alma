@@ -14,6 +14,7 @@ export class CreateAssignmentService {
         const newAssignment = assignmentRepository.create({
             ...assignment,
             class: classes,
+            kind: assignment.kind ?? 'ALTERNATIVA',
         });
 
         await assignmentRepository.save(newAssignment);

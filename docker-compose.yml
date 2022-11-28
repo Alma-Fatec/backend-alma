@@ -18,8 +18,7 @@ services:
     volumes:
       - .:/app/
       - ./nodemon.json:/app/nodemon.json
-    variables:
-      NODE_OPTIONS: --max_old_space_size=1536
+    
 
   db_postgres:
     container_name: 'postgres'
