@@ -1,4 +1,3 @@
-import { ClassesBlock } from '@prisma/client';
 import { Request, Response } from 'express';
 import { Delete, Get, Patch, Post, Route, Tags } from 'tsoa';
 import { In } from 'typeorm';
@@ -22,8 +21,18 @@ export default class ClassesBlockController {
                 throw new ApiError(error.errors.join(' '), 400);
             }
         }
-        const userIds = body.users ?? [];
 
+        let userIds: string[];
+
+        if (typeof body.users === 'string') {
+            userIds = [body.users];
+        }
+
+        if (Array.isArray(body.users)) {
+            userIds = body.users;
+        }
+
+        //@ts-ignore
         const users = await userRepository.findBy({ id: In(userIds) });
 
         const block = blockRepository.create({

@@ -29,6 +29,12 @@ app.use(express.json());
 
 app.use(morgan('dev'));
 app.use(express.static('public'));
+// add multipart/form-data support
+app.use(
+    express.urlencoded({
+        extended: true,
+    }),
+);
 app.use('/uploads', express.static('uploads'));
 
 app.use(routes);
