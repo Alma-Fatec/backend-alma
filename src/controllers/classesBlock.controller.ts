@@ -32,8 +32,9 @@ export default class ClassesBlockController {
             userIds = body.users;
         }
 
+
         //@ts-ignore
-        const users = await userRepository.findBy({ id: In(userIds) });
+        const users = await userRepository.findBy({ id: In(userIds ?? []) });
 
         const block = blockRepository.create({
             ...body,
