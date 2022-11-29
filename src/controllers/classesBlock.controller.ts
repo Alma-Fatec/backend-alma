@@ -22,19 +22,16 @@ export default class ClassesBlockController {
             }
         }
 
-        let userIds: string[];
+        const userIds = body.users ?? [];
 
-        if (typeof body.users === 'string') {
-            userIds = [body.users];
-        }
-
-        if (Array.isArray(body.users)) {
-            userIds = body.users;
-        }
-
+        /**
+         * @TODO - check if users exists
+         * @TODO - check if users are teachers
+         * @TODO - check if users are already in a block
+         */
 
         //@ts-ignore
-        const users = await userRepository.findBy({ id: In(userIds ?? []) });
+        const users = await userRepository.findBy({ id: In(userIds) });
 
         const block = blockRepository.create({
             ...body,

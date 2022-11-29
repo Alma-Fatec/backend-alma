@@ -19,28 +19,24 @@ import './infra/database/dataSource';
 
 const app: Application = express();
 
-app.use(
-    cors({
-        origin: ['http://localhost:3000', '*'],
-    }),
-);
+// solve cors issues with frontend app (localhost:3000) and backend app (localhost:3333) 
+app.use(cors());
 
 app.use(express.json());
 
 app.use(morgan('dev'));
 app.use(express.static('public'));
-// add multipart/form-data support
+
 app.use(
     express.urlencoded({
         extended: true,
     }),
 );
-app.use('/uploads', express.static('uploads'));
 
 app.use(routes);
 app.use(errorMiddleware);
 
-app.use(
+/* app.use(
     '/docs',
     swaggerUi.serve,
     swaggerUi.setup(undefined, {
@@ -48,7 +44,7 @@ app.use(
             url: '/swagger.json',
         },
     }),
-);
+); */
 
 app.listen(process.env.PORT, () => {
     console.log(`🦜: App rodando em http://localhost:${process.env.PORT}`);
