@@ -4,10 +4,9 @@ import { In } from 'typeorm';
 import { ValidationError } from 'yup';
 import { ApiError } from '../middlewares/error';
 import { blockRepository } from '../repositories/block.repository';
-import { classRepository } from '../repositories/class.repository';
 import { userRepository } from '../repositories/user.repository';
+import { DeleteClassesBlockService } from '../services/classesBlock/deleteClassesBlock.service';
 import { classesBlockSchema } from '../validators/classesBlock';
-
 @Route('classesBlock')
 @Tags('classesBlock')
 export default class ClassesBlockController {
@@ -129,22 +128,9 @@ export default class ClassesBlockController {
     @Delete('/:id')
     public async removeBlock(req: Request, res: Response) {
         const { id } = req.params;
+        
+        const result = await new DeleteClassesBlockService().execute(id);
 
-        const block = await blockRepository.findOne({
-            where: { id },
-        });
-
-        if (!block) {
-            throw new ApiError('Esse bloco não existe.', 400);
-        }
-
-        // update classes with this block to null and delete the block
-        await classRepository.update({ block: { id } }, { block: null });
-
-        await blockRepository.remove({
-            id: String(id),
-        });
-
-        return res.status(204).send();
+        return res.status(200).json(result);
     }
 }

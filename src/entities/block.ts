@@ -1,11 +1,9 @@
 import {
     Column,
-    Entity,
-    JoinColumn,
-    JoinTable,
+    Entity, JoinTable,
     ManyToMany,
     OneToMany,
-    PrimaryGeneratedColumn,
+    PrimaryGeneratedColumn
 } from 'typeorm';
 import { v4 } from 'uuid';
 import { Class } from './class';
@@ -47,7 +45,6 @@ export class Block {
 
     @OneToMany(() => Class, (classes) => classes.block, {
         nullable: true,
-   
     })
     classes: Class[];
 
