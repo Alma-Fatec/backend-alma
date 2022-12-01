@@ -1,6 +1,7 @@
 import {
     Column,
     Entity,
+    JoinColumn,
     JoinTable,
     ManyToMany,
     OneToMany,
@@ -22,7 +23,7 @@ interface BlockProps {
 @Entity('block')
 export class Block {
     @PrimaryGeneratedColumn('uuid')
-    public readonly id: string;
+    public id: string;
 
     @Column({ type: 'text' })
     title: string;
@@ -33,14 +34,21 @@ export class Block {
     @Column({ type: 'text', nullable: true })
     cover: string;
 
-    @Column({ type: 'date', default: new Date() })
+    @Column({ type: 'date', nullable: true })
     createdAt: Date;
 
-    @ManyToMany(() => User, (user) => user.blocks, { cascade: true })
+    @ManyToMany(() => User, (user) => user.blocks, {
+        cascade: true,
+        nullable: true,
+        orphanedRowAction: 'nullify',
+    })
     @JoinTable()
     users: User[];
 
-    @OneToMany(() => Class, (classes) => classes.block, { nullable: true })
+    @OneToMany(() => Class, (classes) => classes.block, {
+        nullable: true,
+   
+    })
     classes: Class[];
 
     @Column()

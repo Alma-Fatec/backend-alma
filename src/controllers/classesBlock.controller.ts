@@ -4,6 +4,7 @@ import { In } from 'typeorm';
 import { ValidationError } from 'yup';
 import { ApiError } from '../middlewares/error';
 import { blockRepository } from '../repositories/block.repository';
+import { classRepository } from '../repositories/class.repository';
 import { userRepository } from '../repositories/user.repository';
 import { classesBlockSchema } from '../validators/classesBlock';
 
@@ -22,7 +23,7 @@ export default class ClassesBlockController {
             }
         }
 
-        const userIds = body.users ?? [];
+        const userIds = [...new Set(body.users)] ?? [];
 
         /**
          * @TODO - check if users exists
@@ -137,7 +138,12 @@ export default class ClassesBlockController {
             throw new ApiError('Esse bloco não existe.', 400);
         }
 
-        await blockRepository.remove(block);
+        // update classes with this block to null and delete the block
+        await classRepository.update({ block: { id } }, { block: null });
+
+        await blockRepository.remove({
+            id: String(id),
+        });
 
         return res.status(204).send();
     }

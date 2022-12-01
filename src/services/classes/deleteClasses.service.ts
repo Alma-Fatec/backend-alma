@@ -11,6 +11,12 @@ export class DeleteClassService {
             throw new ApiError('Classe não encontrada', 404);
         }
 
+        classToDelete.block.filter((block) => {
+            return block.classes.filter((classes) => {
+                return classes.id !== classToDelete.id;
+            });
+        });
+
         await classRepository.delete(id);
 
         return classToDelete;

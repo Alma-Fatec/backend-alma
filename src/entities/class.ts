@@ -27,10 +27,21 @@ export class Class {
     @Column({ nullable: true })
     cover: string;
 
-    // every class may have one block
-    @ManyToOne(() => Block, (block) => block.classes)
+    @ManyToOne(() => Block, (block) => block.classes, {
+        nullable: true,
+        onDelete: 'CASCADE',
+        orphanedRowAction: 'nullify',
+    })
     block: Block[];
 
-    @ManyToMany(() => Assignment, (assignment) => assignment.class)
+    @ManyToMany(() => Assignment, (assignment) => assignment.class, {
+        nullable: true,
+    })
     assignments: Assignment[];
+
+    @Column({ nullable: true })
+    created_by: string;
+
+    @Column({ nullable: true })
+    updated_by: string;
 }

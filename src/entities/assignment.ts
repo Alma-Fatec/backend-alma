@@ -30,7 +30,9 @@ export class Assignment {
     @Column({ nullable: true })
     answer: string;
 
-    @OneToMany(() => Options, (options) => options.assignment)
+    @OneToMany(() => Options, (options) => options.assignment, {
+        nullable: true,
+    })
     options: Options[];
 
     @ManyToMany(() => Class, (classs) => classs.assignments)
