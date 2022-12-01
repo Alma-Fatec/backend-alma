@@ -128,7 +128,7 @@ export default class ClassesBlockController {
     @Delete('/:id')
     public async removeBlock(req: Request, res: Response) {
         const { id } = req.params;
-        
+
         const result = await new DeleteClassesBlockService().execute(id);
 
         return res.status(200).json(result);

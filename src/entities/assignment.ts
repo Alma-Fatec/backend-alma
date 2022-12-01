@@ -3,12 +3,10 @@ import {
     Entity,
     JoinTable,
     ManyToMany,
-    OneToMany,
     PrimaryGeneratedColumn,
 } from 'typeorm';
 import { AssignmentType } from './assignmentType';
 import { Class } from './class';
-import { Options } from './options';
 
 @Entity('assignment')
 export class Assignment {
@@ -30,11 +28,6 @@ export class Assignment {
     @Column({ nullable: true })
     answer: string;
 
-    @OneToMany(() => Options, (options) => options.assignment, {
-        nullable: true,
-    })
-    options: Options[];
-
     @ManyToMany(() => Class, (classs) => classs.assignments)
     @JoinTable()
     class: Class[];
@@ -44,4 +37,13 @@ export class Assignment {
 
     @Column({ nullable: true })
     updated_by: string;
+
+    @Column('simple-json', { nullable: true })
+    options: Options[];
+}
+
+interface Options {
+    text: string;
+    file?: string;
+    isCorrect: boolean;
 }

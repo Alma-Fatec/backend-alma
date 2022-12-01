@@ -45,6 +45,7 @@ export class Block {
 
     @OneToMany(() => Class, (classes) => classes.block, {
         nullable: true,
+        cascade: true,
     })
     classes: Class[];
 

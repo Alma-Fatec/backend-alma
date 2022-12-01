@@ -19,13 +19,15 @@ export class UpdateClassesService {
             throw new ApiError('Classe não encontrada', 404);
         }
 
-        const classUpdated = await classRepository.save({
-            ...classToUpdate,
+        classRepository.merge(classToUpdate, {
             ...body,
             // @ts-ignore
             cover: file?.location ?? classToUpdate.cover,
+            block: body.block,
         });
 
-        return classUpdated;
+        const result = await classRepository.save(classToUpdate);
+
+        return result;
     }
 }
