@@ -12,6 +12,6 @@ npm run typeorm:up
 
 echo "Running server"
 
-npm run dev
+npm run start:staging
 
 

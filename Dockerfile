@@ -9,9 +9,9 @@ RUN npm install
 
 COPY . /home/app
 
-RUN npx prisma generate
+# RUN npx prisma generate
 
-RUN npm run build
+# RUN npm run build
 
 EXPOSE 3333
 

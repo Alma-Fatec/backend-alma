@@ -19,6 +19,7 @@
     "scripts": {
         "start": "node dist/index.js",
         "dev": "export NODE_ENV=development && nodemon -e -L",
+        "start:staging": "export NODE_ENV=staging && nodemon -e -L",
         "prebuild": "npm run swagger",
         "build": "tsc --project tsconfig.json",
         "postbuild": "cp -r ./public ./dist",
