@@ -28,7 +28,7 @@ export default class AssignmentsController {
         body.file = file?.location || null;
         const result = await new CreateAssignmentService().execute(body);
 
-        return res.status(200).json(result);
+        return res.status(201).json(result);
     }
 
     @Get('/')

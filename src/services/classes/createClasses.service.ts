@@ -19,7 +19,6 @@ export class CreateClassesService {
             [block.id],
         );
 
-        console.log(block.id);
 
         const newClass = classRepository.create({
             name: classes.name,

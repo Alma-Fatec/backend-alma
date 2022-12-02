@@ -4,6 +4,7 @@ import { assignmentRepository } from '../../repositories/assignment.repository';
 import { classRepository } from '../../repositories/class.repository';
 import { AssignmentType } from '../../entities/assignmentType';
 import { ApiError } from '../../middlewares/error';
+import AzureTextToSpeech from '../../infra/speech';
 
 function isOnType(key: any): key is AssignmentType {
     return [
@@ -13,6 +14,8 @@ function isOnType(key: any): key is AssignmentType {
     ].includes(key);
 }
 export class CreateAssignmentService {
+    private speechService = AzureTextToSpeech.getInstance();
+
     async execute(assignment: Assignment) {
         const classIds = assignment.class ?? [];
 
@@ -26,6 +29,21 @@ export class CreateAssignmentService {
 
         if (assignment.kind == 'ALTERNATIVA_COM_IMAGENS' && !assignment.file) {
             throw new ApiError('Opções da atividade não informadas', 400);
+        }
+
+        if (
+            assignment.kind == 'ALTERNATIVA_COM_AUDIO' &&
+            !assignment.description
+        ) {
+            throw new ApiError('Texto para fala exige descrição', 400);
+        }
+
+        if (assignment.kind == 'ALTERNATIVA_COM_AUDIO' && !assignment.file) {
+            const audio = await this.speechService.textToSpeech(
+                assignment.description,
+            );
+
+            assignment.file = audio;
         }
 
         const classes = await classRepository.findBy({

@@ -11,7 +11,6 @@ export class CreateUserService {
         try {
             userSchema.validateSync(body);
         } catch (error) {
-            console.log(error);
 
             if (error instanceof ValidationError) {
                 throw new ApiError(error.errors.join(' '), 400);
