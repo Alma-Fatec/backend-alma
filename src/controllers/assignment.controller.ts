@@ -1,10 +1,13 @@
 import { Request, Response } from 'express';
 import { Delete, Get, Patch, Post, Route, Tags } from 'tsoa';
+import { ValidationError } from 'yup';
+import { ApiError } from '../middlewares/error';
 import { CreateAssignmentService } from '../services/assignment/createAssignment.service';
 import { DeleteAssignmentService } from '../services/assignment/deleteAssignment.service';
 import { FindAssignmentService } from '../services/assignment/findAssignment.service';
 import { ListAssignmentService } from '../services/assignment/listAssignment.service';
 import { UpdateAssignmentService } from '../services/assignment/patchAssignment.service';
+import { assignmentSchema } from '../validators/assignments';
 
 @Route('assignments')
 @Tags('assignments')
@@ -13,7 +16,15 @@ export default class AssignmentsController {
     public async create(req: Request, res: Response) {
         const { body, file } = req;
 
-        //@ts-ignore
+        try {
+            await assignmentSchema.validate(body);
+        } catch (error) {
+            if (error instanceof ValidationError) {
+                throw new ApiError(error.errors.join(' '), 400);
+            }
+        }
+
+        // @ts-ignore
         body.file = file?.location || null;
         const result = await new CreateAssignmentService().execute(body);
 

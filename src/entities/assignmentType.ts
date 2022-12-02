@@ -1,6 +1,6 @@
 export type AssignmentType =
-    | 'ALTERNATIVA'
+    // | 'ALTERNATIVA'
     | 'ALTERNATIVA_COM_IMAGENS'
-    | 'AUDIO'
+    // | 'AUDIO'
     | 'ALTERNATIVA_COM_AUDIO'
     | 'DIGITAÇÃO';
