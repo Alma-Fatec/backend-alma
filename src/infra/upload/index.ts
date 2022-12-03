@@ -1,15 +1,15 @@
+import { S3Client } from '@aws-sdk/client-s3';
+import { S3 } from 'aws-sdk';
+import { readFileSync } from 'fs';
 import multer from 'multer';
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import multerS3 from 'multer-s3';
+import path from 'path';
 import { ApiError } from '../../middlewares/error';
 import filters from './fileFilters';
-import { createReadStream, readFile, readFileSync } from 'fs';
-import { S3 } from 'aws-sdk';
-import path from 'path';
-import { log } from 'console';
 
+console.log(process.env.AWS_ENDPOINT);
 const s3 = new S3Client({
-    region: process.env.AWS_DEFAULT_REGION,
+    region: process.env.AWS_DEFAULT_REGION as string,
     credentials: {
         accessKeyId: process.env.AWS_ACCESS_KEY_ID as string,
         secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY as string,
@@ -33,7 +33,7 @@ export async function uploadFile(fileName, filePath, mimeType) {
             secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY as string,
         },
         params: { ACL: 'public-read' },
-        // set content type to auto to get the correct content type
+        // set content typez to auto to get the correct content type
         // based on the file extension
         convertResponseTypes: false,
     });
@@ -51,7 +51,6 @@ export async function uploadFile(fileName, filePath, mimeType) {
     return await (
         await s3.upload(params).promise()
     ).Location;
-    // only return if the file was uploaded successfully
 }
 
 const uploadService = multer({

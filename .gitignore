@@ -9,3 +9,5 @@ temp/
 .env
 *.env
 database/boilerplate
+
+uploads/
