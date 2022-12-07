@@ -55,7 +55,7 @@ export async function uploadFile(fileName, filePath, mimeType) {
 
 const uploadService = multer({
     storage,
-    fileFilter(req, file, callback) {
+    /*  fileFilter(req, file, callback) {
         if (!filters[req.baseUrl.split('/')[1]](file.originalname)) {
             return callback(
                 new ApiError(
@@ -68,7 +68,7 @@ const uploadService = multer({
         }
 
         callback(null, true);
-    },
+    }, */
     limits: {
         fileSize: 1024 * 1024 * 5, // 5MB,
     },

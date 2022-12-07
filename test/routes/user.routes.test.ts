@@ -16,9 +16,6 @@ jest.mock('../../src/infra/database/dataSource', () => {
     };
 });
 
-
-
-
 describe('User Routes', () => {
     describe('GET /users', () => {
         test('receive 401 when no token is provided', async () => {

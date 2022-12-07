@@ -19,7 +19,7 @@ export class CreateClassesService {
             [block.id],
         );
 
-
+        // @ts-ignore
         const newClass = classRepository.create({
             name: classes.name,
             description: classes.description,

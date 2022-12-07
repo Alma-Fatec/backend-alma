@@ -36,17 +36,19 @@ class AzureTextToSpeech {
             audioConfig,
         );
 
-
         synthesizer.speakTextAsync(
             text,
             async (result) => {
                 //console.log(result);
                 synthesizer.close();
+                // @ts-ignore
                 synthesizer.dispose();
             },
             (error) => {
                 //conDate.now().toString()sole.log(error);
                 synthesizer.close();
+                // @ts-ignore
+
                 synthesizer.dispose();
             },
         );
