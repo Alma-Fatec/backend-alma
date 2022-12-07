@@ -9,8 +9,10 @@ import AssignmentRouter from './assignment.routes';
 
 const router = Router();
 
+const filePath = 'public/index.html';
+
 router.get('/', (_req, res) => {
-    res.json({ message: 'olá mundo!dd', timestamp: new Date() });
+    res.sendFile(filePath);
 });
 
 router.get('/ping', async (_req, res) => {

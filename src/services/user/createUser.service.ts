@@ -35,6 +35,9 @@ export class CreateUserService {
 
         const passwordHash = await hash(body.password, 8);
 
+        // @ts-ignore
+        delete body.id;
+
         const user = await userRepository.create({
             ...body,
             cpf: String(body.cpf),
